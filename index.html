@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>happymai — พื้นที่วางเรื่องหนักใจ</title>
+<meta name="description" content="เล่าเรื่องหนักใจ แล้วรับการ์ดให้กำลังใจที่ตั้งใจเขียนไว้ให้คุณ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+<style>
+:root{
+  --cream:#fbf3e6; --muted:rgba(251,243,230,.66); --gold:#f2d39b; --gold-deep:#b8874a;
+  --rose:#e9a6b8; --line:rgba(242,211,155,.3);
+  --serif:'Noto Serif Thai',serif; --sans:'IBM Plex Sans Thai',system-ui,sans-serif; --latin:'Cormorant Garamond',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  font-family:var(--sans);color:var(--cream);overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(120% 80% at 50% 115%,#6a3f6e 0%,#2c1e55 38%,#130f30 70%,#0a0820 100%) fixed;
+  min-height:100vh;
+}
+#sky,#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#sky{z-index:0}
+#fx{z-index:60}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;filter:blur(70px);opacity:.5}
+.aurora span{position:absolute;border-radius:50%;animation:drift 24s ease-in-out infinite alternate}
+.aurora span:nth-child(1){width:55vmax;height:55vmax;left:-18vmax;top:-22vmax;background:radial-gradient(circle,#6b4bc8 0%,transparent 65%)}
+.aurora span:nth-child(2){width:50vmax;height:50vmax;right:-20vmax;top:8vmax;background:radial-gradient(circle,#c46a9a 0%,transparent 65%);animation-duration:30s}
+.aurora span:nth-child(3){width:62vmax;height:62vmax;left:8vmax;bottom:-38vmax;background:radial-gradient(circle,#f0a77a 0%,transparent 60%);animation-duration:34s}
+@keyframes drift{to{transform:translate(6vmax,4vmax) scale(1.12)}}
+
+main{position:relative;z-index:2;min-height:100vh;display:grid;place-items:center;padding:72px 20px 40px}
+.screen{grid-area:1/1;width:100%;max-width:620px;display:none;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.screen.shown{display:flex}
+.screen.active{opacity:1;transform:none}
+
+.eyebrow{font-family:var(--latin);font-style:italic;font-size:1.1rem;letter-spacing:.08em;color:var(--gold);opacity:.85;margin-bottom:12px}
+.logo{font-family:var(--latin);font-weight:500;font-size:clamp(3.8rem,14vw,6.8rem);line-height:1.05;
+  background:linear-gradient(180deg,#fff6e6 15%,#f2d39b 55%,#e9a6b8 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 8px 34px rgba(242,211,155,.28))}
+.logo span{font-style:italic;font-weight:600}
+.lead{margin:22px 0 40px;font-size:1.08rem;line-height:1.95;color:var(--muted);font-weight:300}
+.fine{margin-top:34px;font-size:.8rem;color:rgba(251,243,230,.45);font-weight:300}
+#intro > *{animation:up 1.1s cubic-bezier(.2,.7,.2,1) backwards}
+#intro > *:nth-child(2){animation-delay:.15s}
+#intro > *:nth-child(3){animation-delay:.3s}
+#intro > *:nth-child(4){animation-delay:.45s}
+#intro > *:nth-child(5){animation-delay:.6s}
+@keyframes up{from{opacity:0;transform:translateY(24px)}}
+
+.btn{position:relative;overflow:hidden;font-family:var(--sans);font-size:1rem;font-weight:500;border:0;cursor:pointer;border-radius:999px;padding:15px 36px;transition:transform .25s,box-shadow .25s,opacity .25s}
+.btn.primary{color:#2a1a3a;background:linear-gradient(135deg,#fdebc8,#f2c48f 50%,#e9a6b8);box-shadow:0 12px 32px -10px rgba(242,196,143,.6),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn.primary::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 4s ease-in-out infinite}
+@keyframes shine{0%,65%{left:-60%}100%{left:130%}}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 18px 44px -12px rgba(242,196,143,.8)}
+.btn.ghost{color:var(--cream);background:rgba(255,255,255,.06);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn.ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+.btn:disabled{opacity:.5;pointer-events:none}
+
+.panel{position:relative;width:100%;text-align:left;padding:36px 32px 30px;border-radius:28px;
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.08)}
+.panel-head{text-align:center;margin-bottom:28px}
+.panel-head h2{font-family:var(--serif);font-weight:600;font-size:1.55rem}
+.panel-head p{color:var(--muted);font-size:.93rem;margin-top:8px;font-weight:300}
+.field{margin-bottom:22px}
+label{display:block;font-size:.95rem;color:var(--gold);margin-bottom:10px;font-weight:500}
+label em{font-style:normal;color:var(--muted);font-weight:300;font-size:.85em}
+input,textarea{width:100%;font-family:var(--sans);font-size:1.02rem;color:var(--cream);background:rgba(10,8,32,.38);
+  border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:14px 18px;outline:none;transition:border-color .3s,box-shadow .3s,background .3s}
+input:focus,textarea:focus{border-color:rgba(242,211,155,.6);box-shadow:0 0 0 4px rgba(242,211,155,.12);background:rgba(10,8,32,.55)}
+::placeholder{color:rgba(251,243,230,.35)}
+.story-wrap{position:relative}
+textarea{min-height:230px;resize:vertical;line-height:1.8;display:block}
+textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-color:transparent}
+.float-layer{position:absolute;inset:0;padding:15px 19px;font-size:1.02rem;line-height:1.8;pointer-events:none;overflow:visible}
+.fl-inner{white-space:pre-wrap;word-break:break-word}
+.fl-inner span{display:inline-block;white-space:pre;will-change:transform,opacity}
+.released{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.15rem;color:var(--gold);opacity:0;transform:translateY(8px);transition:opacity 1s,transform 1s;pointer-events:none}
+.released.show{opacity:1;transform:none}
+.meta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:.78rem;color:var(--muted);font-weight:300}
+.panel .btn{width:100%;margin-top:6px;padding:17px}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+#pick h2,.reveal-title{font-family:var(--serif);font-size:clamp(1.3rem,4.6vw,1.75rem);font-weight:600;line-height:1.5}
+#pick .sub{color:var(--muted);font-weight:300;margin:8px 0 26px}
+
+/* ===== สำรับ 7 ใบแบบกางพัด ===== */
+.deck{position:relative;width:100%;height:clamp(250px,56vw,340px)}
+.mini{--w:clamp(78px,19vw,128px);--gap:clamp(36px,10.5vw,78px);
+  position:absolute;left:50%;bottom:28px;width:var(--w);height:calc(var(--w)*1.6);margin-left:calc(var(--w) / -2);
+  border:0;background:none;padding:0;border-radius:12px;cursor:pointer;transform-origin:50% 130%;
+  transform:translateX(calc(var(--t) * var(--gap))) translateY(var(--y)) rotate(var(--r));
+  transition:transform .55s cubic-bezier(.2,.7,.2,1),opacity .55s,filter .55s;
+  animation:fanOut 1.1s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:var(--d)}
+.mini:hover,.mini:focus-visible{transform:translateX(calc(var(--t) * var(--gap))) translateY(calc(var(--y) - 26px)) rotate(var(--r)) scale(1.05);outline:none;z-index:15}
+.mini:hover .cardback,.mini:focus-visible .cardback{box-shadow:0 0 0 1px rgba(242,211,155,.75),0 20px 60px -10px rgba(242,211,155,.5)}
+.mini.chosen{transform:translateX(0) translateY(-40px) rotate(0) scale(1.18);z-index:20}
+.mini.chosen .cardback{box-shadow:0 0 0 1px var(--gold),0 0 70px rgba(242,211,155,.6)}
+.mini.gone{opacity:0;transform:translateX(calc(var(--t) * var(--gap))) translateY(110px) rotate(var(--r)) scale(.88);filter:blur(5px)}
+@keyframes fanOut{
+  0%{opacity:0;transform:translateX(0) translateY(80px) rotate(0) scale(.9)}
+  35%{opacity:1;transform:translateX(0) translateY(0) rotate(0) scale(1)}
+}
+.deck-hint{font-size:.85rem;color:var(--muted);font-weight:300;margin-top:6px;opacity:0;animation:up .8s 1.8s forwards}
+
+.cardback{position:absolute;inset:0;border-radius:inherit;overflow:hidden;color:var(--gold);
+  background:radial-gradient(circle at 50% 50%,rgba(242,211,155,.2),transparent 60%),linear-gradient(160deg,#2d2366,#1a1440 55%,#2e1942);
+  border:1px solid rgba(242,211,155,.45);box-shadow:0 22px 50px -18px rgba(0,0,0,.75);transition:box-shadow .4s}
+.cardback svg{position:absolute;inset:0;width:100%;height:100%}
+.cardback::after{content:'';position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.16) 50%,transparent 58%);animation:sheen 5s ease-in-out infinite}
+@keyframes sheen{0%,55%{transform:translateX(-60%)}100%{transform:translateX(60%)}}
+
+.reveal-title{margin-bottom:6px}
+.stage{position:relative;perspective:1600px;margin:30px 0 34px}
+.halo{position:absolute;left:50%;top:50%;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(242,211,155,.55),rgba(233,166,184,.2) 40%,transparent 70%);opacity:0;transform:scale(.3);pointer-events:none}
+.halo.on{animation:halo 2.6s ease-out forwards}
+@keyframes halo{0%{opacity:0;transform:scale(.3)}25%{opacity:1}100%{opacity:.35;transform:scale(1.1)}}
+.floater{animation:floaty 6s ease-in-out infinite}
+@keyframes floaty{50%{transform:translateY(-10px)}}
+.card3d{width:min(340px,80vw);aspect-ratio:5/8;position:relative;transform-style:preserve-3d;cursor:pointer;
+  transition:transform 1.3s cubic-bezier(.3,.7,.2,1);animation:rise 1s cubic-bezier(.2,.7,.2,1) backwards}
+.card3d.flipped{transform:rotateY(180deg)}
+@keyframes rise{from{opacity:0;transform:translateY(60px) scale(.9)}}
+.face{position:absolute;inset:0;border-radius:22px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face .cardback{border-radius:22px}
+.face.front{transform:rotateY(180deg);box-shadow:0 40px 90px -30px rgba(0,0,0,.8),0 0 70px -10px rgba(242,211,155,.45);border-radius:22px}
+
+.tarot{position:absolute;inset:0;border-radius:22px;overflow:hidden;color:#3a2547;font-size:clamp(12.5px,3.9vw,16px);
+  background:radial-gradient(120% 60% at 50% 0%,rgba(255,255,255,.9),rgba(255,255,255,0) 60%),
+  radial-gradient(90% 50% at 50% 100%,rgba(233,166,184,.38),rgba(233,166,184,0) 70%),
+  linear-gradient(165deg,#fff8ec,#f7e5cc 60%,#f1d2c6)}
+.t-frame{position:absolute;inset:.75em;border:1px solid rgba(168,124,72,.55);border-radius:.9em;padding:1.5em 1.3em 1.1em;display:flex;flex-direction:column;align-items:center;text-align:center}
+.t-frame::before{content:'';position:absolute;inset:.35em;border:1px solid rgba(168,124,72,.22);border-radius:.6em;pointer-events:none}
+.t-corner{position:absolute;color:#b8874a;font-size:.8em;line-height:1}
+.t-corner.tl{top:.75em;left:.85em}.t-corner.tr{top:.75em;right:.85em}.t-corner.bl{bottom:.75em;left:.85em}.t-corner.br{bottom:.75em;right:.85em}
+.t-no{font-family:var(--latin);font-style:italic;font-size:.95em;letter-spacing:.25em;color:#a07846}
+.t-sym{width:3.4em;height:3.4em;margin:.7em 0 .5em}
+.t-name{font-family:var(--latin);font-weight:600;font-size:1.75em;line-height:1.1;color:#3a2547}
+.t-th{font-family:var(--serif);font-size:.86em;color:#8a6a7a;margin-top:.25em}
+.t-div{width:55%;height:1px;background:linear-gradient(90deg,rgba(184,135,74,0),#b8874a,rgba(184,135,74,0));margin:1em 0 .9em;position:relative}
+.t-div::after{content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;background:#b8874a;transform:translate(-50%,-50%) rotate(45deg)}
+.t-to{font-family:var(--serif);font-weight:600;font-size:.95em;color:#7a4f66;margin-bottom:.3em}
+.t-msg{flex:1;display:flex;align-items:center;justify-content:center;width:100%;overflow:hidden}
+.t-text{font-family:var(--serif);font-size:1.02em;line-height:1.9;color:#3a2547}
+.caret{display:inline-block;width:1px;height:1.1em;background:#b8874a;margin-left:2px;vertical-align:-3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.t-sign{font-family:var(--latin);font-style:italic;font-size:.95em;color:#a07846;margin-top:.7em;opacity:0;transition:opacity 1s}
+.t-sign.show{opacity:1}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;transform:translateY(12px);transition:.8s;pointer-events:none}
+.actions.show{opacity:1;transform:none;pointer-events:auto}
+.care-note{display:none;margin-top:22px;max-width:440px;font-size:.85rem;line-height:1.8;color:var(--cream);padding:14px 18px;border-radius:16px;background:rgba(233,166,184,.12);border:1px solid rgba(233,166,184,.35)}
+.care-note.show{display:block;animation:up .8s backwards}
+
+.sound-btn{position:fixed;top:18px;right:18px;z-index:70;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.06);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:background .3s}
+.sound-btn:hover{background:rgba(255,255,255,.14)}
+.sound-btn svg{width:20px;height:20px}
+.brand-mini{position:fixed;top:22px;left:22px;z-index:70;font-family:var(--latin);font-size:1.35rem;color:var(--gold);opacity:0;transition:opacity .6s;pointer-events:none}
+.brand-mini span{font-style:italic;font-weight:600}
+.brand-mini.show{opacity:.9}
+
+.toast{position:fixed;left:50%;bottom:28px;z-index:80;transform:translate(-50%,20px);opacity:0;padding:12px 22px;border-radius:999px;font-size:.9rem;
+  background:rgba(20,16,48,.85);border:1px solid var(--line);backdrop-filter:blur(10px);transition:.4s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.export{position:fixed;left:-10000px;top:0;width:540px;height:960px;overflow:hidden;font-family:var(--sans);
+  background:linear-gradient(180deg,#130f30 0%,#2c1e55 42%,#5b3a6e 78%,#8a5070 100%)}
+.ex-glow{position:absolute;left:50%;top:50%;width:700px;height:700px;margin:-350px 0 0 -350px;border-radius:50%;background:radial-gradient(circle,rgba(242,211,155,.32),rgba(242,211,155,0) 65%)}
+.ex-star{position:absolute;border-radius:50%;background:#fff8ea}
+.ex-head{position:absolute;top:60px;left:0;right:0;text-align:center}
+.ex-logo{font-family:var(--latin);font-size:46px;color:#f2d39b}
+.ex-logo span{font-style:italic;font-weight:600}
+.ex-sub{font-family:var(--serif);font-size:17px;color:rgba(251,243,230,.8);margin-top:8px}
+.ex-card{position:absolute;left:70px;top:190px;width:400px;height:640px;border-radius:24px;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.ex-card .tarot{font-size:18px}
+.ex-card .t-sign{opacity:1;transition:none}
+.ex-foot{position:absolute;bottom:56px;left:0;right:0;text-align:center;font-size:15px;color:rgba(251,243,230,.7)}
+
+@media (max-width:520px){
+  .panel{padding:28px 20px 22px;border-radius:24px}
+  main{padding-top:80px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.2s!important}
+}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="aurora"><span></span><span></span><span></span></div>
+<canvas id="fx"></canvas>
+
+<div class="brand-mini" id="brandMini">happy<span>mai</span></div>
+<button class="sound-btn" id="soundBtn" aria-label="เปิดหรือปิดเสียง"></button>
+
+<main>
+  <section id="intro" class="screen shown active">
+    <p class="eyebrow">a quiet place for heavy hearts</p>
+    <h1 class="logo">happy<span>mai</span></h1>
+    <p class="lead">วันนี้เป็นยังไงบ้าง เล่าให้ฟังได้นะ<br>ไม่มีใครตัดสินคุณที่นี่</p>
+    <button class="btn primary" id="startBtn">เริ่มเล่า</button>
+    <p class="fine">เรื่องที่เล่าจะไม่ถูกเผยแพร่สาธารณะ</p>
+  </section>
+
+  <section id="write" class="screen">
+    <form class="panel" id="form" novalidate>
+      <div class="panel-head">
+        <h2>วางเรื่องหนักใจไว้ตรงนี้</h2>
+        <p>ไม่ต้องเรียบเรียงให้สวย พิมพ์ตามที่รู้สึกได้เลย</p>
+      </div>
+      <div class="field">
+        <label for="nick">อยากให้เราเรียกคุณว่าอะไร <em>(ไม่ใส่ก็ได้)</em></label>
+        <input id="nick" maxlength="20" placeholder="ชื่อเล่น" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="story">มีอะไรอยู่ในใจ เล่ามาได้เลย</label>
+        <div class="story-wrap">
+          <textarea id="story" maxlength="1500" placeholder="วันนี้รู้สึกว่า..."></textarea>
+          <div class="float-layer"><div class="fl-inner" id="flInner"></div></div>
+          <div class="released" id="released">ปล่อยมันไปแล้วนะ</div>
+        </div>
+        <div class="meta"><span id="count">0 / 1500</span><span>ส่งถึงผู้ดูแลเว็บเท่านั้น</span></div>
+      </div>
+      <button class="btn primary" type="submit" id="sendBtn">ปล่อยมันไป</button>
+    </form>
+  </section>
+
+  <section id="pick" class="screen">
+    <p class="eyebrow">breathe in, breathe out</p>
+    <h2>เลือกการ์ดหนึ่งใบที่ใจคุณอยากเปิด</h2>
+    <p class="sub">หายใจลึกๆ แล้วเลือกใบที่รู้สึกว่าใช่</p>
+    <div class="deck" id="deck"></div>
+    <p class="deck-hint">การ์ดทั้ง 7 ใบรอคุณอยู่ ไม่มีใบไหนผิด</p>
+  </section>
+
+  <section id="reveal" class="screen">
+    <p class="eyebrow">your card for today</p>
+    <h2 class="reveal-title" id="revealTitle"></h2>
+    <div class="stage">
+      <div class="halo" id="halo"></div>
+      <div class="floater">
+        <div class="card3d" id="card3d">
+          <div class="face back"><div class="cardback" id="liveBack"></div></div>
+          <div class="face front" id="liveFront"></div>
+        </div>
+      </div>
+    </div>
+    <div class="actions" id="actions">
+      <button class="btn ghost" id="saveBtn">บันทึกการ์ดเป็นรูป</button>
+      <button class="btn primary" id="againBtn">เล่าเรื่องอื่นอีก</button>
+    </div>
+    <p class="care-note" id="careNote">ถ้าตอนนี้รู้สึกไม่ปลอดภัย โทร <b>1323</b> สายด่วนสุขภาพจิต ฟรี 24 ชั่วโมง หรือ <b>1669</b> กรณีฉุกเฉิน คุณไม่ได้อยู่คนเดียวนะ</p>
+  </section>
+</main>
+
+<div class="export" id="exportCard" aria-hidden="true">
+  <div class="ex-glow"></div>
+  <div id="exStars"></div>
+  <div class="ex-head">
+    <div class="ex-logo">happy<span>mai</span></div>
+    <div class="ex-sub" id="exSub"></div>
+  </div>
+  <div class="ex-card" id="exCard"></div>
+  <div class="ex-foot">เล่าเรื่องหนักใจ แล้วรับการ์ดของคุณได้ที่ happymai</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========= ตั้งค่า ========= */
+const SCRIPT_URL = ''; // วาง URL ของ Google Apps Script ตรงนี้
+const DECK_SIZE = 7;   // จำนวนการ์ดให้เลือก (แนะนำ 5–9 ใบ)
+
+/* ========= ข้อมูลการ์ด ========= */
+const CATS = {
+  study:{no:'IX',name:'The Scholar',th:'ผู้เรียนรู้',label:'การเรียน',sub:'การ์ดสำหรับใจที่เหนื่อยกับการเรียน',
+    keys:['เรียน','สอบ','เกรด','การบ้าน','ครู','อาจารย์','มหาลัย','มหาวิทยาลัย','โรงเรียน','ติว','วิทยานิพนธ์','ธีสิส','tcas','ทีแคส','gpa','คณะ','ซิ่ว','ควิซ','มิดเทอม','ไฟนอล','midterm','final','เทอม','แอดมิชชั่น'],
+    msgs:['เกรดเป็นแค่ตัวเลขที่วัดวันหนึ่งของคุณ มันวัดไม่ได้ว่าคุณพยายามมากแค่ไหน และไม่ได้บอกว่าคุณจะไปได้ไกลแค่ไหน',
+      'ไม่เป็นไรเลยถ้าวันนี้ยังไม่เข้าใจ คนเก่งทุกคนเคยงงในเรื่องที่ตอนนี้เขาอธิบายได้คล่อง',
+      'พักสายตาสักห้านาที ดื่มน้ำสักแก้ว สมองที่ได้พักจะจำได้ดีกว่าสมองที่ถูกบังคับ',
+      'การสอบครั้งนี้ไม่ใช่บทสรุปของชีวิต มันเป็นแค่หนึ่งบรรทัดในหนังสือเล่มยาวที่คุณกำลังเขียน',
+      'อย่าเอาบทแรกของตัวเองไปเทียบกับบทที่ยี่สิบของคนอื่น ทุกคนเดินในจังหวะของตัวเอง',
+      'ความพยายามที่ไม่มีใครเห็นในคืนนี้ จะกลายเป็นความมั่นใจที่ทุกคนเห็นในวันหนึ่ง']},
+  work:{no:'VII',name:'The Builder',th:'ผู้สร้าง',label:'การงาน',sub:'การ์ดสำหรับคนที่แบกงานไว้เยอะ',
+    keys:['งาน','หัวหน้า','เจ้านาย','บอส','ออฟฟิศ','บริษัท','เงินเดือน','ลาออก','ประชุม','เดดไลน์','deadline','โปรเจกต์','โปรเจค','ลูกค้า','เพื่อนร่วมงาน','โอที','สัมภาษณ์','ตกงาน','อาชีพ','kpi'],
+    msgs:['คุณมีค่ามากกว่าผลงานที่ส่งในแต่ละวัน และมากกว่าคำติของใครบางคนในห้องประชุม',
+      'งานที่ยังไม่เสร็จจะยังรออยู่ตรงนั้น แต่ใจและร่างกายของคุณไม่ควรต้องรอให้งานเสร็จก่อนถึงจะได้พัก',
+      'การรู้สึกท้อกับงาน ไม่ได้แปลว่าคุณไม่เก่ง มันแปลว่าคุณแบกอะไรไว้เยอะมากจริงๆ',
+      'บางวัน แค่ทำงานจนครบวันได้ ก็นับว่าเก่งมากแล้ว',
+      'ถ้าที่ไหนทำให้คุณรู้สึกเล็กลงทุกวัน คุณมีสิทธิ์เลือกที่ที่ทำให้คุณได้เติบโต',
+      'ทุกอย่างที่คุณทำวันนี้ แม้จะเล็กแค่ไหน คืออิฐอีกก้อนที่กำลังก่อเป็นอนาคตของคุณ']},
+  love:{no:'VI',name:'The Heart',th:'หัวใจ',label:'ความรัก',sub:'การ์ดสำหรับหัวใจที่กำลังเจ็บ',
+    keys:['แฟน','เลิก','ความรัก','รัก','คนคุย','อกหัก','นอกใจ','มือที่สาม','โสด','ง้อ','คิดถึงเขา','แอบชอบ','คนที่ชอบ','ชอบเขา','เขาไม่','ทิ้ง','crush','เทใจ'],
+    msgs:['การที่ใครสักคนไม่เห็นค่าคุณ ไม่ได้ทำให้คุณมีค่าน้อยลงแม้แต่นิดเดียว',
+      'คิดถึงก็ได้ ร้องไห้ก็ได้ ไม่ต้องรีบหายดี หัวใจมีเวลาของมันเอง',
+      'คุณสมควรได้รับความรักที่ไม่ทำให้ต้องเดาใจกันทุกวัน',
+      'บางคนเข้ามาเพื่อสอน ไม่ได้เข้ามาเพื่ออยู่ บทเรียนนั้นเจ็บ แต่จะทำให้คุณรักตัวเองเป็นมากขึ้น',
+      'ความรักที่ดีที่สุดที่คุณจะได้รับ เริ่มต้นจากความอ่อนโยนที่คุณมีให้ตัวเอง',
+      'วันหนึ่งคุณจะนึกถึงเรื่องนี้แล้วยิ้มได้โดยไม่เจ็บ วันนั้นจะมาถึงแน่นอน']},
+  family:{no:'IV',name:'The Home',th:'บ้าน',label:'ครอบครัว',sub:'การ์ดสำหรับเรื่องในบ้านที่พูดยาก',
+    keys:['พ่อ','แม่','ครอบครัว','ที่บ้าน','คนในบ้าน','กลับบ้าน','ผู้ปกครอง','ญาติ','ยาย','พี่สาว','พี่ชาย','น้องสาว','น้องชาย','สามี','ภรรยา'],
+    msgs:['การรักครอบครัว กับการเหนื่อยกับครอบครัว เกิดขึ้นพร้อมกันได้ ไม่ได้แปลว่าคุณเป็นคนไม่ดี',
+      'คุณไม่จำเป็นต้องแบกความคาดหวังของทุกคนไว้คนเดียว',
+      'บางครั้งคนที่รักเรา ก็แสดงออกในแบบที่ทำให้เราเจ็บ ทั้งที่เขาไม่ได้ตั้งใจ',
+      'ถ้าบ้านยังไม่ใช่ที่ที่ปลอดภัย ขอให้คุณได้สร้างมุมปลอดภัยเล็กๆ ของตัวเอง ในใจ หรือกับคนที่เข้าใจ',
+      'คุณมีสิทธิ์ตั้งขอบเขต แม้กับคนที่ใกล้ชิดที่สุด นั่นคือการดูแลตัวเอง ไม่ใช่การไม่รัก',
+      'บ้านไม่ได้มีแค่ที่ที่เราเกิด แต่ยังเป็นผู้คนที่ทำให้เรารู้สึกว่าได้เป็นตัวเอง']},
+  money:{no:'X',name:'The Seed',th:'เมล็ดพันธุ์',label:'การเงิน',sub:'การ์ดสำหรับช่วงที่การเงินตึงมือ',
+    keys:['เงิน','หนี้','ผ่อน','ค่าเทอม','ค่าเช่า','ค่าใช้จ่าย','ไม่พอใช้','ยากจน','ไม่มีเงิน','ยืมเงิน','บัตรเครดิต','ดอกเบี้ย','ขาดทุน','ชักหน้าไม่ถึงหลัง'],
+    msgs:['ช่วงที่การเงินตึงมือ ไม่ได้บอกว่าคุณล้มเหลว มันบอกแค่ว่าตอนนี้เป็นฤดูที่ต้องอดทน',
+      'ค่อยๆ แก้ทีละเรื่อง ทีละเดือน เมล็ดที่ปลูกวันนี้อาจยังไม่งอก แต่มันกำลังหยั่งราก',
+      'คุณค่าของตัวคุณ ไม่เคยขึ้นอยู่กับตัวเลขในบัญชี',
+      'ลองเขียนสิ่งที่กังวลลงกระดาษ ปัญหาที่ถูกมองเห็นชัดๆ มักดูเล็กลงกว่าตอนที่วนอยู่ในหัว',
+      'การขอความช่วยเหลือไม่ใช่เรื่องน่าอาย คนที่ผ่านช่วงยากมาได้ ส่วนใหญ่ไม่ได้ผ่านมาคนเดียว',
+      'วันที่ลำบากแบบนี้จะผ่านไป และคุณจะภูมิใจที่ประคองตัวเองมาได้']},
+  lonely:{no:'XVII',name:'The Star',th:'ดวงดาว',label:'ความเหงา',sub:'การ์ดสำหรับคืนที่รู้สึกเหงา',
+    keys:['เหงา','คนเดียว','ไม่มีใคร','โดดเดี่ยว','ไม่มีเพื่อน','เพื่อน','ถูกเมิน','โดนเมิน','ไม่เข้าพวก','อ้างว้าง','ไม่มีที่ยืน','ไม่มีใครเข้าใจ'],
+    msgs:['แม้จะรู้สึกเหมือนอยู่คนเดียว แต่ตอนนี้มีคนที่ตั้งใจเขียนการ์ดใบนี้ไว้รอคุณอยู่',
+      'ดาวแต่ละดวงอยู่ห่างกันมาก แต่ก็ยังส่องแสงอยู่บนฟ้าผืนเดียวกัน คุณไม่ได้โดดเดี่ยวอย่างที่คิด',
+      'การมีเพื่อนน้อย ไม่ได้แปลว่าคุณไม่น่ารัก บางทีคุณแค่ยังไม่เจอคนที่ใช่',
+      'ลองส่งข้อความหาใครสักคนวันนี้ แค่คำว่า "เป็นไงบ้าง" ก็อาจเปิดประตูได้ทั้งสองฝั่ง',
+      'ช่วงที่ต้องอยู่กับตัวเอง คือโอกาสได้รู้จักคนที่จะอยู่กับคุณไปตลอดชีวิต ซึ่งก็คือตัวคุณเอง',
+      'คุณคู่ควรกับการมีคนรับฟัง และวันนี้ ที่นี่ฟังคุณอยู่']},
+  tired:{no:'XVIII',name:'The Moon',th:'พระจันทร์',label:'ความเหนื่อยล้า',sub:'การ์ดสำหรับคนที่เหนื่อยมามาก',
+    keys:['เหนื่อย','ท้อ','หมดไฟ','หมดแรง','ไม่ไหว','นอนไม่หลับ','ป่วย','เครียด','burnout','เบื่อ','อ่อนล้า','หมดพลัง','ร้องไห้','กดดัน','กังวล','วิตก'],
+    msgs:['พักได้นะ การพักไม่ใช่การยอมแพ้ มันคือการเติมแรงเพื่อไปต่อ',
+      'แม้แต่พระจันทร์ก็ยังมีคืนที่ไม่เต็มดวง และไม่มีใครบอกว่ามันไม่สวย',
+      'วันนี้คุณไม่จำเป็นต้องเก่ง แค่ผ่านไปให้ได้ก็พอแล้ว',
+      'ถ้าไม่ไหวจริงๆ วางทุกอย่างลงสักครู่ หายใจเข้าลึกๆ โลกรอคุณได้',
+      'ความเหนื่อยที่คุณรู้สึก คือหลักฐานว่าคุณสู้มาไกลแค่ไหน',
+      'คืนนี้นอนเร็วขึ้นสักนิดนะ พรุ่งนี้คือวันใหม่ที่ยังไม่มีอะไรผิดพลาด']},
+  general:{no:'XIX',name:'The Sun',th:'พระอาทิตย์',label:'ทั่วไป',sub:'การ์ดที่ตั้งใจส่งถึงคุณวันนี้',
+    msgs:['คุณผ่านวันที่แย่ที่สุดมาได้ทุกครั้ง ครั้งนี้ก็เช่นกัน',
+      'ความรู้สึกของคุณสำคัญเสมอ ไม่มีเรื่องไหนเล็กเกินไปที่จะทำให้เสียใจ',
+      'ไม่ต้องรีบรู้สึกดีขึ้น แค่วันนี้เข้าใจตัวเองมากขึ้นอีกนิดก็พอ',
+      'พายุไม่เคยอยู่ตลอดไป ฟ้าหลังฝนมักจะใสกว่าที่เคย',
+      'ขอบคุณที่ยังอยู่ตรงนี้ และยังพยายาม แม้ในวันที่มันยาก',
+      'ใจดีกับตัวเองให้มากเท่าที่คุณใจดีกับคนอื่นนะ',
+      'คุณไม่จำเป็นต้องมีคำตอบให้ทุกอย่างวันนี้ ค่อยๆ ไปทีละก้าวก็พอ',
+      'สิ่งที่คุณรู้สึกอยู่ตอนนี้ไม่ใช่ตัวตนทั้งหมดของคุณ มันเป็นแค่สภาพอากาศของวันนี้']},
+  care:{no:'XI',name:'The Lantern',th:'ตะเกียง',label:'เฝ้าระวัง',sub:'การ์ดใบนี้อยากอยู่ข้างคุณ',
+    msgs:['ขอบคุณที่ยังเล่าให้ฟัง ความเจ็บปวดที่คุณรู้สึกเป็นเรื่องจริงและสำคัญ คุณไม่ต้องผ่านมันคนเดียว โทรคุยกับสายด่วนสุขภาพจิต 1323 ได้ตลอด 24 ชั่วโมง ไม่มีค่าใช้จ่าย',
+      'ตอนนี้อาจมืดจนมองไม่เห็นทาง แต่ความรู้สึกนี้เปลี่ยนได้ และมีคนพร้อมช่วยคุณจริงๆ โทร 1323 หรือบอกคนที่ไว้ใจสักคนนะ คุณมีค่ามากกว่าที่คิด']}
+};
+const CARE_KEYS=['อยากตาย','ฆ่าตัวตาย','ไม่อยากอยู่แล้ว','ไม่อยากมีชีวิต','จบชีวิต','ทำร้ายตัวเอง','กรีดแขน','ไม่อยากตื่น','หายไปจากโลก','อยากหายไป','suicide','killmyself'];
+
+const ICONS={
+  study:'<path d="M8 16c12-4 20-2 24 4 4-6 12-8 24-4v32c-12-4-20-2-24 4-4-6-12-8-24-4z"/><path d="M32 20v32"/>',
+  work:'<path d="M6 52l18-28 10 14 8-10 16 24z"/><path d="M42 28V12l10 4-10 4"/>',
+  love:'<path d="M32 54C14 42 6 32 6 22c0-8 6-14 14-14 6 0 10 4 12 8 2-4 6-8 12-8 8 0 14 6 14 14 0 10-8 20-26 32z"/>',
+  family:'<path d="M8 30L32 10l24 20"/><path d="M14 26v28h36V26"/><path d="M26 54V38h12v16"/>',
+  money:'<path d="M32 56V30"/><path d="M32 34c0-12-10-18-20-16 0 10 8 16 20 16z"/><path d="M32 28c0-10 8-18 20-16 0 10-8 16-20 16z"/><path d="M20 56h24"/>',
+  lonely:'<path d="M32 6l4 22 22 4-22 4-4 22-4-22-22-4 22-4z"/><circle cx="52" cy="12" r="2"/><circle cx="12" cy="52" r="1.5"/>',
+  tired:'<path d="M40 8a24 24 0 1 0 16 36A20 20 0 0 1 40 8z"/><circle cx="50" cy="20" r="1.5"/>',
+  general:'<circle cx="32" cy="32" r="11"/><path d="M32 6v8M32 50v8M6 32h8M50 32h8M13.6 13.6l5.7 5.7M44.7 44.7l5.7 5.7M13.6 50.4l5.7-5.7M44.7 19.3l5.7-5.7"/>',
+  care:'<path d="M24 14h16M32 8v6"/><path d="M26 14c-6 4-8 10-8 18s2 14 8 18h12c6-4 8-10 8-18s-2-14-8-18"/><path d="M28 50v5h8v-5"/><path d="M32 25c-4 4-4 9 0 12 4-3 4-8 0-12z"/>'
+};
+const iconSVG=(k,c)=>`<svg viewBox="0 0 64 64" width="100%" height="100%" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>`;
+const STAR4='M0-6Q0 0 6 0Q0 0 0 6Q0 0-6 0Q0 0 0-6z';
+const BACK_SVG=`<svg viewBox="0 0 200 320" preserveAspectRatio="none" aria-hidden="true">
+<rect x="9" y="9" width="182" height="302" rx="12" fill="none" stroke="currentColor" stroke-opacity=".6"/>
+<rect x="16" y="16" width="168" height="288" rx="8" fill="none" stroke="currentColor" stroke-opacity=".25"/>
+<g fill="none" stroke="currentColor"><circle cx="100" cy="160" r="56" stroke-opacity=".55"/><circle cx="100" cy="160" r="44" stroke-opacity=".3" stroke-dasharray="2 5"/><circle cx="100" cy="160" r="72" stroke-opacity=".14"/><path d="M100 88V70M100 232v18M28 160H16M172 160h12" stroke-opacity=".35"/></g>
+<path d="M100 116Q103 157 144 160Q103 163 100 204Q97 163 56 160Q97 157 100 116Z" fill="currentColor" fill-opacity=".9"/>
+<path d="M107 34a15 15 0 1 0 0 28a12 12 0 1 1 0-28z" fill="currentColor" fill-opacity=".75"/>
+<g fill="currentColor" fill-opacity=".7"><path d="${STAR4}" transform="translate(34 34)"/><path d="${STAR4}" transform="translate(166 34)"/><path d="${STAR4}" transform="translate(34 286)"/><path d="${STAR4}" transform="translate(166 286)"/><circle cx="100" cy="282" r="2.5"/><circle cx="88" cy="282" r="1.4"/><circle cx="112" cy="282" r="1.4"/></g></svg>`;
+const TAROT_HTML=`<div class="tarot"><div class="t-frame">
+<span class="t-corner tl">✦</span><span class="t-corner tr">✦</span><span class="t-corner bl">✦</span><span class="t-corner br">✦</span>
+<p class="t-no"></p><div class="t-sym"></div><h3 class="t-name"></h3><p class="t-th"></p><div class="t-div"></div>
+<p class="t-to"></p><div class="t-msg"><span class="t-text"></span></div><p class="t-sign">with love, happymai</p></div></div>`;
+
+/* ========= ตัวช่วย ========= */
+const $=s=>document.querySelector(s);
+const rand=(a,b)=>a+Math.random()*(b-a);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function graphemes(s){
+  if(window.Intl&&Intl.Segmenter) return Array.from(new Intl.Segmenter('th',{granularity:'grapheme'}).segment(s),x=>x.segment);
+  const out=[];for(const ch of s){if(/[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/.test(ch)&&out.length)out[out.length-1]+=ch;else out.push(ch)}return out;
+}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* ========= เปลี่ยนหน้า ========= */
+let currentScreen=$('#intro');
+function showScreen(id){
+  const next=$('#'+id),prev=currentScreen;if(next===prev)return Promise.resolve();
+  currentScreen=next;prev.classList.remove('active');
+  $('#brandMini').classList.toggle('show',id!=='intro');
+  return new Promise(res=>setTimeout(()=>{
+    prev.classList.remove('shown');next.classList.add('shown');window.scrollTo({top:0,behavior:'smooth'});
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{next.classList.add('active');setTimeout(res,700)}));
+  },600));
+}
+
+/* ========= ท้องฟ้า ========= */
+const sky=$('#sky'),sctx=sky.getContext('2d'),fx=$('#fx'),fctx=fx.getContext('2d');
+let stars=[],motes=[],shoot=null;
+function sizeCanvas(c){const d=Math.min(devicePixelRatio||1,2);c.width=innerWidth*d;c.height=innerHeight*d;c.getContext('2d').setTransform(d,0,0,d,0,0)}
+const newMote=init=>({x:rand(0,innerWidth),y:init?rand(0,innerHeight):innerHeight+20,r:rand(1,3.2),vy:rand(.12,.45),vx:rand(-.08,.08),a:rand(.12,.4)});
+function initSky(){
+  sizeCanvas(sky);sizeCanvas(fx);
+  const n=Math.round(innerWidth*innerHeight/4200);
+  stars=Array.from({length:n},()=>({x:rand(0,innerWidth),y:rand(0,innerHeight*.9),r:rand(.2,1.5),p:rand(0,6.28),s:rand(.5,2)}));
+  motes=Array.from({length:24},()=>newMote(true));
+}
+function drawSky(t=0){
+  const W=innerWidth,H=innerHeight;sctx.clearRect(0,0,W,H);
+  for(const s of stars){
+    const a=.25+.75*(.5+.5*Math.sin(t*.0012*s.s+s.p));
+    sctx.globalAlpha=a;sctx.fillStyle='#fff8ea';sctx.beginPath();sctx.arc(s.x,s.y,s.r,0,6.283);sctx.fill();
+    if(s.r>1.25){sctx.globalAlpha=a*.35;sctx.fillRect(s.x-s.r*3.5,s.y-.3,s.r*7,.6);sctx.fillRect(s.x-.3,s.y-s.r*3.5,.6,s.r*7)}
+  }
+  sctx.globalAlpha=1;
+  for(const m of motes){
+    m.y-=m.vy;m.x+=m.vx+Math.sin(t*.0005+m.y*.01)*.12;if(m.y<-20)Object.assign(m,newMote(false));
+    const g=sctx.createRadialGradient(m.x,m.y,0,m.x,m.y,m.r*4);
+    g.addColorStop(0,`rgba(242,211,155,${m.a})`);g.addColorStop(1,'rgba(242,211,155,0)');
+    sctx.fillStyle=g;sctx.beginPath();sctx.arc(m.x,m.y,m.r*4,0,6.283);sctx.fill();
+  }
+  if(!shoot&&Math.random()<.0025)shoot={x:rand(W*.3,W),y:rand(0,H*.35),vx:-rand(6,10),vy:rand(2.5,4.5),life:0};
+  if(shoot){
+    shoot.life++;shoot.x+=shoot.vx;shoot.y+=shoot.vy;
+    const tx=shoot.x-shoot.vx*14,ty=shoot.y-shoot.vy*14,gr=sctx.createLinearGradient(shoot.x,shoot.y,tx,ty);
+    gr.addColorStop(0,'rgba(255,248,234,.95)');gr.addColorStop(1,'rgba(255,248,234,0)');
+    sctx.globalAlpha=Math.max(0,1-shoot.life/60);sctx.strokeStyle=gr;sctx.lineWidth=1.4;
+    sctx.beginPath();sctx.moveTo(shoot.x,shoot.y);sctx.lineTo(tx,ty);sctx.stroke();sctx.globalAlpha=1;
+    if(shoot.life>60)shoot=null;
+  }
+  if(!reduced)requestAnimationFrame(drawSky);
+}
+initSky();drawSky();
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{initSky();if(reduced)drawSky()},200)});
+
+/* ========= พลุ หัวใจ ดาว ========= */
+let parts=[],fxRunning=false;
+function shape(ctx,type,s){
+  ctx.beginPath();
+  if(type==='heart'){ctx.moveTo(0,s*.9);ctx.bezierCurveTo(-s*1.3,0,-s*.7,-s*1.1,0,-s*.35);ctx.bezierCurveTo(s*.7,-s*1.1,s*1.3,0,0,s*.9)}
+  else if(type==='star'){ctx.moveTo(0,-s);ctx.quadraticCurveTo(0,0,s,0);ctx.quadraticCurveTo(0,0,0,s);ctx.quadraticCurveTo(0,0,-s,0);ctx.quadraticCurveTo(0,0,0,-s)}
+  else ctx.arc(0,0,s*.35,0,6.283);
+  ctx.fill();
+}
+function burst(x,y,n=120){
+  if(reduced)n=30;
+  const colors=['#f2d39b','#fde9c4','#e9a6b8','#cdb8ff','#ffffff'],types=['heart','star','star','dot'];
+  for(let i=0;i<n;i++){const a=rand(0,6.283),sp=rand(2,8);
+    parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-2,life:0,max:rand(70,130),size:rand(3,9),rot:rand(0,6),vr:rand(-.12,.12),
+      color:colors[i%colors.length],type:types[Math.floor(Math.random()*types.length)]})}
+  if(!fxRunning){fxRunning=true;requestAnimationFrame(fxLoop)}
+}
+function fxLoop(){
+  fctx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.life<p.max);
+  for(const p of parts){
+    p.life++;p.vx*=.965;p.vy=p.vy*.965+.055;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;
+    const k=1-p.life/p.max;fctx.save();fctx.globalAlpha=Math.min(1,k*1.5);fctx.translate(p.x,p.y);fctx.rotate(p.rot);
+    fctx.fillStyle=p.color;fctx.shadowColor=p.color;fctx.shadowBlur=10;shape(fctx,p.type,p.size*(.55+.45*k));fctx.restore();
+  }
+  if(parts.length)requestAnimationFrame(fxLoop);else{fxRunning=false;fctx.clearRect(0,0,innerWidth,innerHeight)}
+}
+
+/* ========= เสียง ========= */
+let actx=null,soundOn=localStorage.getItem('hm_sound')!=='off';
+const ICON_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const ICON_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
+function renderSoundBtn(){$('#soundBtn').innerHTML=soundOn?ICON_ON:ICON_OFF}
+renderSoundBtn();
+$('#soundBtn').onclick=()=>{soundOn=!soundOn;localStorage.setItem('hm_sound',soundOn?'on':'off');renderSoundBtn();if(soundOn)bell(880)};
+function ac(){if(!actx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;actx=new A()}if(actx.state==='suspended')actx.resume();return actx}
+function bell(f,when=0,vol=.16,len=2.2){
+  if(!soundOn)return;const c=ac();if(!c)return;const t=c.currentTime+when;
+  [[f,1],[f*2.01,.25]].forEach(([fr,v])=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=fr;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+len);
+    o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+len+.1)});
+}
+function chime(){[659.25,880,1108.73,1318.51,1760].forEach((f,i)=>bell(f,i*.09,.12,2.4))}
+function whoosh(){
+  if(!soundOn)return;const c=ac();if(!c)return;const len=1.8,buf=c.createBuffer(1,c.sampleRate*len,c.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const src=c.createBufferSource(),bp=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime;
+  src.buffer=buf;bp.type='bandpass';bp.Q.value=1.2;bp.frequency.setValueAtTime(300,t);bp.frequency.exponentialRampToValueAtTime(2600,t+len);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09,t+.5);g.gain.exponentialRampToValueAtTime(.0001,t+len);
+  src.connect(bp);bp.connect(g);g.connect(c.destination);src.start(t);src.stop(t+len);
+}
+function shuffleSound(){for(let i=0;i<DECK_SIZE;i++)bell(rand(1500,2100),.35+i*.08,.025,.25)}
+
+/* ========= วิเคราะห์หมวด ========= */
+function detect(text){
+  const t=text.toLowerCase().replace(/แม่ง|พ่อง/g,' ');
+  const compact=t.replace(/\s+/g,'');
+  if(CARE_KEYS.some(k=>compact.includes(k)))return 'care';
+  let best='general',score=0;
+  for(const [k,c] of Object.entries(CATS)){
+    if(!c.keys)continue;let s=0;
+    for(const w of c.keys){let i=-1;while((i=t.indexOf(w,i+1))!==-1)s+=w.length>=4?2:1}
+    if(s>score){score=s;best=k}
+  }
+  return best;
+}
+let lastMsg='';
+function pickMsg(list){let m;do{m=list[Math.floor(Math.random()*list.length)]}while(list.length>1&&m===lastMsg);lastMsg=m;return m}
+
+/* ========= Google Sheets ========= */
+function saveToSheet(p){
+  if(!SCRIPT_URL)return;
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams(p)}).catch(()=>{});
+}
+
+/* ========= ฟอร์ม ========= */
+const form=$('#form'),storyEl=$('#story'),nickEl=$('#nick'),flInner=$('#flInner'),released=$('#released'),sendBtn=$('#sendBtn');
+let current=null;
+$('#liveBack').innerHTML=BACK_SVG;$('#liveFront').innerHTML=TAROT_HTML;$('#exCard').innerHTML=TAROT_HTML;
+(function exStars(){let h='';for(let i=0;i<70;i++){const s=rand(1,3);h+=`<div class="ex-star" style="left:${rand(0,540)}px;top:${rand(0,960)}px;width:${s}px;height:${s}px;opacity:${rand(.3,.9).toFixed(2)}"></div>`}$('#exStars').innerHTML=h})();
+
+$('#startBtn').onclick=()=>{ac();showScreen('write').then(()=>{if(matchMedia('(hover:hover)').matches)storyEl.focus()})};
+storyEl.addEventListener('input',()=>{$('#count').textContent=`${storyEl.value.length} / 1500`});
+storyEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))form.requestSubmit()});
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const story=storyEl.value.trim();
+  if(story.length<3){form.classList.remove('shake');void form.offsetWidth;form.classList.add('shake');toast('เล่าให้ฟังอีกนิดนะ');return}
+  sendBtn.disabled=true;storyEl.readOnly=true;nickEl.readOnly=true;
+  const cat=detect(story),data=CATS[cat];
+  current={cat,data,msg:pickMsg(data.msgs),name:nickEl.value.trim()};
+  saveToSheet({name:current.name,story,category:data.label,card:`${data.name} (${data.th})`,message:current.msg,flag:cat==='care'?'care':''});
+  whoosh();
+  await releaseText(storyEl.value);
+  buildDeck();
+  showScreen('pick').then(shuffleSound);
+});
+
+function releaseText(text){
+  return new Promise(resolve=>{
+    flInner.innerHTML='';released.classList.remove('show');
+    const g=graphemes(text),chunk=Math.max(1,Math.ceil(g.length/450)),frag=document.createDocumentFragment(),spans=[];
+    for(let i=0;i<g.length;i+=chunk){
+      g.slice(i,i+chunk).join('').split('\n').forEach((p,j)=>{
+        if(j>0)frag.appendChild(document.createElement('br'));
+        if(p){const s=document.createElement('span');s.textContent=p;frag.appendChild(s);spans.push(s)}
+      });
+    }
+    flInner.appendChild(frag);
+    const st=storyEl.scrollTop,boxH=storyEl.clientHeight;
+    flInner.style.transform=`translateY(${-st}px)`;
+    storyEl.classList.add('ghosting');
+    const visible=spans.filter(s=>{const y=s.offsetTop-st;const ok=y>-30&&y<boxH-10;if(!ok)s.style.visibility='hidden';return ok});
+    if(reduced){flInner.animate([{opacity:1},{opacity:0}],{duration:600,fill:'forwards'});setTimeout(()=>released.classList.add('show'),500);setTimeout(resolve,1600);return}
+    const stagger=Math.min(24,1300/Math.max(1,visible.length));let maxEnd=0;
+    visible.forEach((s,i)=>{
+      const dx=rand(-90,90),dy=-rand(130,340),rot=rand(-50,50),dur=rand(1500,2400),delay=i*stagger;maxEnd=Math.max(maxEnd,dur+delay);
+      s.animate([
+        {transform:'translate(0,0) rotate(0deg) scale(1)',opacity:1,filter:'blur(0px)',color:'#fbf3e6'},
+        {transform:`translate(${dx*.15}px,${dy*.12}px) rotate(${rot*.2}deg) scale(1.05)`,opacity:1,filter:'blur(0px)',color:'#f2d39b',offset:.25},
+        {transform:`translate(${dx}px,${dy}px) rotate(${rot}deg) scale(.6)`,opacity:0,filter:'blur(6px)',color:'#e9a6b8'}
+      ],{duration:dur,delay,easing:'cubic-bezier(.25,.6,.3,1)',fill:'forwards'});
+    });
+    setTimeout(()=>released.classList.add('show'),Math.min(maxEnd*.65,2200));
+    setTimeout(resolve,Math.min(maxEnd,3200)+1000);
+  });
+}
+
+/* ========= เลือกการ์ด (กางพัด) ========= */
+const deck=$('#deck');
+function buildDeck(){
+  deck.innerHTML='';delete deck.dataset.locked;
+  const mid=(DECK_SIZE-1)/2,spread=Math.min(8,48/DECK_SIZE*1.2);
+  for(let i=0;i<DECK_SIZE;i++){
+    const t=i-mid;
+    const b=document.createElement('button');b.className='mini';
+    b.style.setProperty('--t',t);
+    b.style.setProperty('--r',(t*spread).toFixed(2)+'deg');
+    b.style.setProperty('--y',(t*t*4.5).toFixed(1)+'px');
+    b.style.setProperty('--d',(.6+i*.08)+'s');
+    b.style.zIndex=i+1;
+    b.setAttribute('aria-label',`การ์ดใบที่ ${i+1} จาก ${DECK_SIZE}`);
+    b.innerHTML=`<div class="cardback">${BACK_SVG}</div>`;
+    b.onclick=()=>choose(b);deck.appendChild(b);
+  }
+}
+function choose(b){
+  if(deck.dataset.locked)return;deck.dataset.locked='1';bell(1046.5,0,.12,1.6);
+  deck.querySelectorAll('.mini').forEach((m,i)=>{
+    if(m===b)m.classList.add('chosen');
+    else setTimeout(()=>m.classList.add('gone'),i*45);
+  });
+  setTimeout(()=>{prepareCard();showScreen('reveal').then(()=>setTimeout(flipCard,350))},1100);
+}
+
+/* ========= หงายการ์ด ========= */
+const card3d=$('#card3d'),liveTarot=()=>$('#liveFront .tarot');
+let typing=null;
+function fillCard(root,cur,full){
+  const d=cur.data;
+  root.querySelector('.t-no').textContent='No. '+d.no;
+  root.querySelector('.t-sym').innerHTML=iconSVG(cur.cat,'#b8874a');
+  root.querySelector('.t-name').textContent=d.name;
+  root.querySelector('.t-th').textContent=d.th;
+  root.querySelector('.t-to').textContent=cur.name?`ถึง ${cur.name}`:'ถึง คนเก่งที่กำลังอ่านอยู่';
+  root.querySelector('.t-text').textContent=full?cur.msg:'';
+  root.querySelector('.t-sign').classList.toggle('show',!!full);
+}
+function prepareCard(){
+  card3d.style.transition='none';card3d.classList.remove('flipped');void card3d.offsetWidth;card3d.style.transition='';
+  $('#halo').classList.remove('on');$('#actions').classList.remove('show');$('#careNote').classList.remove('show');
+  $('#revealTitle').textContent=current.data.sub;fillCard(liveTarot(),current,false);
+}
+function flipCard(){
+  card3d.classList.add('flipped');
+  setTimeout(()=>{const r=card3d.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2);chime();$('#halo').classList.add('on')},520);
+  setTimeout(()=>typeWriter(liveTarot().querySelector('.t-text'),current.msg,onTyped),1400);
+}
+function typeWriter(el,text,done){
+  const g=graphemes(text);el.textContent='';
+  const node=document.createTextNode(''),caret=document.createElement('span');caret.className='caret';el.append(node,caret);
+  let i=0;const speed=reduced?0:42;
+  const finish=()=>{clearInterval(typing.timer);node.data=text;typing=null;setTimeout(()=>caret.remove(),1200);done()};
+  typing={finish,timer:setInterval(()=>{node.data+=g[i++];if(i%3===0&&soundOn)tick();if(i>=g.length)finish()},speed)};
+}
+function tick(){const c=actx;if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime;o.type='sine';o.frequency.value=rand(1800,2400);g.gain.setValueAtTime(.012,t);g.gain.exponentialRampToValueAtTime(.0001,t+.06);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.07)}
+card3d.addEventListener('click',()=>{if(typing)typing.finish()});
+function onTyped(){
+  liveTarot().querySelector('.t-sign').classList.add('show');
+  setTimeout(()=>{$('#actions').classList.add('show');if(current.cat==='care')$('#careNote').classList.add('show')},600);
+}
+
+/* ========= ปุ่มท้าย ========= */
+$('#againBtn').onclick=()=>{
+  storyEl.value='';storyEl.readOnly=false;nickEl.readOnly=false;storyEl.classList.remove('ghosting');
+  flInner.innerHTML='';released.classList.remove('show');sendBtn.disabled=false;$('#count').textContent='0 / 1500';
+  showScreen('write');
+};
+$('#saveBtn').onclick=async()=>{
+  const btn=$('#saveBtn');
+  if(!window.html2canvas){toast('โหลดเครื่องมือบันทึกรูปไม่สำเร็จ ลองใหม่อีกครั้ง');return}
+  btn.disabled=true;const label=btn.textContent;btn.textContent='กำลังสร้างรูป...';
+  try{
+    fillCard($('#exCard .tarot'),current,true);$('#exSub').textContent=current.data.sub;
+    await document.fonts.ready;
+    const canvas=await html2canvas($('#exportCard'),{scale:2,backgroundColor:'#130f30',logging:false,
+      onclone:doc=>{doc.getElementById('exportCard').style.left='0'}});
+    const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+    const file=new File([blob],'happymai-card.png',{type:'image/png'});
+    const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if(mobile&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'happymai'})}
+    else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='happymai-card.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
+    toast('บันทึกการ์ดเรียบร้อย');
+  }catch(err){if(err&&err.name!=='AbortError')toast('บันทึกไม่สำเร็จ ลองใหม่อีกครั้งนะ')}
+  finally{btn.disabled=false;btn.textContent=label}
+};
+</script>
+</body>
+</html>
