@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>happymai — พื้นที่วางเรื่องหนักใจ</title>
-<meta name="description" content="เล่าเรื่องหนักใจ แล้วรับการ์ดให้กำลังใจที่ตั้งใจเขียนไว้ให้คุณ">
+<meta name="description" content="เล่าเรื่องหนักใจ แล้วรับการ์ดให้กำลังใจที่ตั้งใจเขียนไว้ให้คุณ | Share what weighs on you and receive a card written just for you">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -32,7 +32,8 @@ body{
 .aurora span:nth-child(3){width:62vmax;height:62vmax;left:8vmax;bottom:-38vmax;background:radial-gradient(circle,#f0a77a 0%,transparent 60%);animation-duration:34s}
 @keyframes drift{to{transform:translate(6vmax,4vmax) scale(1.12)}}
 
-main{position:relative;z-index:2;min-height:100vh;display:grid;place-items:center;padding:72px 20px 40px}
+main{position:relative;z-index:2;min-height:100vh;display:grid;place-items:center;padding:72px 20px 40px;transition:opacity .26s ease}
+body.swapping main{opacity:0}
 .screen{grid-area:1/1;width:100%;max-width:620px;display:none;flex-direction:column;align-items:center;text-align:center;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 .screen.shown{display:flex}
 .screen.active{opacity:1;transform:none}
@@ -154,6 +155,15 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
 .t-sign{font-family:var(--latin);font-style:italic;font-size:.95em;color:#a07846;margin-top:.7em;opacity:0;transition:opacity 1s}
 .t-sign.show{opacity:1}
 
+/* ===== ปรับตัวอักษรตอนเป็นภาษาอังกฤษ ===== */
+html[lang="en"] .panel-head h2{font-family:var(--latin);font-size:1.95rem;font-weight:600}
+html[lang="en"] #pick h2,html[lang="en"] .reveal-title{font-family:var(--latin);font-size:clamp(1.55rem,5.4vw,2.1rem);line-height:1.3}
+html[lang="en"] .released{font-family:var(--latin);font-style:italic;font-size:1.45rem}
+html[lang="en"] .t-th{font-family:var(--latin);font-style:italic;font-size:1em;letter-spacing:.04em}
+html[lang="en"] .t-to{font-family:var(--latin);font-style:italic;font-size:1.15em}
+html[lang="en"] .t-text{font-family:var(--latin);font-size:1.24em;font-weight:500;line-height:1.55}
+html[lang="en"] .ex-sub{font-family:var(--latin);font-style:italic;font-size:21px}
+
 .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;opacity:0;transform:translateY(12px);transition:.8s;pointer-events:none}
 .actions.show{opacity:1;transform:none;pointer-events:auto}
 .care-note{display:none;margin-top:22px;max-width:440px;font-size:.85rem;line-height:1.8;color:var(--cream);padding:14px 18px;border-radius:16px;background:rgba(233,166,184,.12);border:1px solid rgba(233,166,184,.35)}
@@ -163,6 +173,18 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--gold);cursor:pointer;display:grid;place-items:center;transition:background .3s}
 .sound-btn:hover{background:rgba(255,255,255,.14)}
 .sound-btn svg{width:20px;height:20px}
+
+/* ===== ปุ่มเปลี่ยนภาษา ===== */
+.lang-switch{position:fixed;top:18px;right:72px;z-index:70;display:flex;height:44px;padding:4px;border-radius:999px;border:1px solid var(--line);
+  background:rgba(255,255,255,.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.lang-switch button{position:relative;z-index:1;width:50px;border:0;background:none;color:var(--cream);font-family:var(--sans);font-size:.85rem;font-weight:500;
+  letter-spacing:.04em;cursor:pointer;border-radius:999px;transition:color .35s}
+.lang-switch button[aria-pressed="true"]{color:#2a1a3a}
+.lang-switch button:focus-visible{outline:1px solid var(--gold);outline-offset:2px}
+.lang-pill{position:absolute;top:4px;bottom:4px;left:4px;width:50px;border-radius:999px;
+  background:linear-gradient(135deg,#fdebc8,#f2c48f 60%,#e9a6b8);box-shadow:0 6px 18px -6px rgba(242,196,143,.7);transition:transform .45s cubic-bezier(.3,.7,.2,1)}
+.lang-switch[data-active="en"] .lang-pill{transform:translateX(50px)}
+
 .brand-mini{position:fixed;top:22px;left:22px;z-index:70;font-family:var(--latin);font-size:1.35rem;color:var(--gold);opacity:0;transition:opacity .6s;pointer-events:none}
 .brand-mini span{font-style:italic;font-weight:600}
 .brand-mini.show{opacity:.9}
@@ -182,11 +204,15 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
 .ex-card{position:absolute;left:70px;top:190px;width:400px;height:640px;border-radius:24px;box-shadow:0 30px 70px rgba(0,0,0,.45)}
 .ex-card .tarot{font-size:18px}
 .ex-card .t-sign{opacity:1;transition:none}
-.ex-foot{position:absolute;bottom:56px;left:0;right:0;text-align:center;font-size:15px;color:rgba(251,243,230,.7)}
+.ex-foot{position:absolute;bottom:56px;left:0;right:0;text-align:center;font-size:15px;color:rgba(251,243,230,.7);padding:0 30px}
 
 @media (max-width:520px){
   .panel{padding:28px 20px 22px;border-radius:24px}
-  main{padding-top:80px}
+  main{padding-top:84px}
+}
+@media (max-width:360px){
+  .lang-switch button,.lang-pill{width:44px}
+  .lang-switch[data-active="en"] .lang-pill{transform:translateX(44px)}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.2s!important}
@@ -199,46 +225,51 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
 <canvas id="fx"></canvas>
 
 <div class="brand-mini" id="brandMini">happy<span>mai</span></div>
+<div class="lang-switch" id="langSwitch" role="group" aria-label="Language / ภาษา" data-active="th">
+  <span class="lang-pill"></span>
+  <button type="button" data-lang="th" aria-pressed="true">ไทย</button>
+  <button type="button" data-lang="en" aria-pressed="false">EN</button>
+</div>
 <button class="sound-btn" id="soundBtn" aria-label="เปิดหรือปิดเสียง"></button>
 
 <main>
   <section id="intro" class="screen shown active">
     <p class="eyebrow">a quiet place for heavy hearts</p>
     <h1 class="logo">happy<span>mai</span></h1>
-    <p class="lead">วันนี้เป็นยังไงบ้าง เล่าให้ฟังได้นะ<br>ไม่มีใครตัดสินคุณที่นี่</p>
-    <button class="btn primary" id="startBtn">เริ่มเล่า</button>
-    <p class="fine">เรื่องที่เล่าจะไม่ถูกเผยแพร่สาธารณะ</p>
+    <p class="lead" data-i18n-html="lead">วันนี้เป็นยังไงบ้าง เล่าให้ฟังได้นะ<br>ไม่มีใครตัดสินคุณที่นี่</p>
+    <button class="btn primary" id="startBtn" data-i18n="start">เริ่มเล่า</button>
+    <p class="fine" data-i18n="fine">เรื่องที่เล่าจะไม่ถูกเผยแพร่สาธารณะ</p>
   </section>
 
   <section id="write" class="screen">
     <form class="panel" id="form" novalidate>
       <div class="panel-head">
-        <h2>วางเรื่องหนักใจไว้ตรงนี้</h2>
-        <p>ไม่ต้องเรียบเรียงให้สวย พิมพ์ตามที่รู้สึกได้เลย</p>
+        <h2 data-i18n="writeH">วางเรื่องหนักใจไว้ตรงนี้</h2>
+        <p data-i18n="writeP">ไม่ต้องเรียบเรียงให้สวย พิมพ์ตามที่รู้สึกได้เลย</p>
       </div>
       <div class="field">
-        <label for="nick">อยากให้เราเรียกคุณว่าอะไร <em>(ไม่ใส่ก็ได้)</em></label>
-        <input id="nick" maxlength="20" placeholder="ชื่อเล่น" autocomplete="off">
+        <label for="nick" data-i18n-html="nickL">อยากให้เราเรียกคุณว่าอะไร <em>(ไม่ใส่ก็ได้)</em></label>
+        <input id="nick" maxlength="20" placeholder="ชื่อเล่น" data-i18n-ph="nickPh" autocomplete="off">
       </div>
       <div class="field">
-        <label for="story">มีอะไรอยู่ในใจ เล่ามาได้เลย</label>
+        <label for="story" data-i18n="storyL">มีอะไรอยู่ในใจ เล่ามาได้เลย</label>
         <div class="story-wrap">
-          <textarea id="story" maxlength="1500" placeholder="วันนี้รู้สึกว่า..."></textarea>
+          <textarea id="story" maxlength="1500" placeholder="วันนี้รู้สึกว่า..." data-i18n-ph="storyPh"></textarea>
           <div class="float-layer"><div class="fl-inner" id="flInner"></div></div>
-          <div class="released" id="released">ปล่อยมันไปแล้วนะ</div>
+          <div class="released" id="released" data-i18n="released">ปล่อยมันไปแล้วนะ</div>
         </div>
-        <div class="meta"><span id="count">0 / 1500</span><span>ส่งถึงผู้ดูแลเว็บเท่านั้น</span></div>
+        <div class="meta"><span id="count">0 / 1500</span><span data-i18n="private">ส่งถึงผู้ดูแลเว็บเท่านั้น</span></div>
       </div>
-      <button class="btn primary" type="submit" id="sendBtn">ปล่อยมันไป</button>
+      <button class="btn primary" type="submit" id="sendBtn" data-i18n="send">ปล่อยมันไป</button>
     </form>
   </section>
 
   <section id="pick" class="screen">
     <p class="eyebrow">breathe in, breathe out</p>
-    <h2>เลือกการ์ดหนึ่งใบที่ใจคุณอยากเปิด</h2>
-    <p class="sub">หายใจลึกๆ แล้วเลือกใบที่รู้สึกว่าใช่</p>
+    <h2 data-i18n="pickH">เลือกการ์ดหนึ่งใบที่ใจคุณอยากเปิด</h2>
+    <p class="sub" data-i18n="pickSub">หายใจลึกๆ แล้วเลือกใบที่รู้สึกว่าใช่</p>
     <div class="deck" id="deck"></div>
-    <p class="deck-hint">การ์ดทั้ง 7 ใบรอคุณอยู่ ไม่มีใบไหนผิด</p>
+    <p class="deck-hint" data-i18n="hint">การ์ดทั้ง 7 ใบรอคุณอยู่ ไม่มีใบไหนผิด</p>
   </section>
 
   <section id="reveal" class="screen">
@@ -254,10 +285,10 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
       </div>
     </div>
     <div class="actions" id="actions">
-      <button class="btn ghost" id="saveBtn">บันทึกการ์ดเป็นรูป</button>
-      <button class="btn primary" id="againBtn">เล่าเรื่องอื่นอีก</button>
+      <button class="btn ghost" id="saveBtn" data-i18n="save">บันทึกการ์ดเป็นรูป</button>
+      <button class="btn primary" id="againBtn" data-i18n="again">เล่าเรื่องอื่นอีก</button>
     </div>
-    <p class="care-note" id="careNote">ถ้าตอนนี้รู้สึกไม่ปลอดภัย โทร <b>1323</b> สายด่วนสุขภาพจิต ฟรี 24 ชั่วโมง หรือ <b>1669</b> กรณีฉุกเฉิน คุณไม่ได้อยู่คนเดียวนะ</p>
+    <p class="care-note" id="careNote" data-i18n-html="care"></p>
   </section>
 </main>
 
@@ -269,7 +300,7 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
     <div class="ex-sub" id="exSub"></div>
   </div>
   <div class="ex-card" id="exCard"></div>
-  <div class="ex-foot">เล่าเรื่องหนักใจ แล้วรับการ์ดของคุณได้ที่ happymai</div>
+  <div class="ex-foot" data-i18n="exFoot">เล่าเรื่องหนักใจ แล้วรับการ์ดของคุณได้ที่ happymai</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -279,78 +310,224 @@ textarea.ghosting{color:transparent;caret-color:transparent;-webkit-text-fill-co
 const SCRIPT_URL = ''; // วาง URL ของ Google Apps Script ตรงนี้
 const DECK_SIZE = 7;   // จำนวนการ์ดให้เลือก (แนะนำ 5–9 ใบ)
 
+/* ========= ข้อความบนหน้าเว็บ 2 ภาษา ========= */
+const I18N = {
+  th:{
+    title:'happymai — พื้นที่วางเรื่องหนักใจ',
+    lead:'วันนี้เป็นยังไงบ้าง เล่าให้ฟังได้นะ<br>ไม่มีใครตัดสินคุณที่นี่',
+    start:'เริ่มเล่า',
+    fine:'เรื่องที่เล่าจะไม่ถูกเผยแพร่สาธารณะ',
+    writeH:'วางเรื่องหนักใจไว้ตรงนี้',
+    writeP:'ไม่ต้องเรียบเรียงให้สวย พิมพ์ตามที่รู้สึกได้เลย',
+    nickL:'อยากให้เราเรียกคุณว่าอะไร <em>(ไม่ใส่ก็ได้)</em>',
+    nickPh:'ชื่อเล่น',
+    storyL:'มีอะไรอยู่ในใจ เล่ามาได้เลย',
+    storyPh:'วันนี้รู้สึกว่า...',
+    released:'ปล่อยมันไปแล้วนะ',
+    private:'ส่งถึงผู้ดูแลเว็บเท่านั้น',
+    send:'ปล่อยมันไป',
+    pickH:'เลือกการ์ดหนึ่งใบที่ใจคุณอยากเปิด',
+    pickSub:'หายใจลึกๆ แล้วเลือกใบที่รู้สึกว่าใช่',
+    hint:'การ์ดทั้ง {n} ใบรอคุณอยู่ ไม่มีใบไหนผิด',
+    cardAria:'การ์ดใบที่ {i} จาก {n}',
+    save:'บันทึกการ์ดเป็นรูป',
+    saving:'กำลังสร้างรูป...',
+    again:'เล่าเรื่องอื่นอีก',
+    care:'ถ้าตอนนี้รู้สึกไม่ปลอดภัย โทร <b>1323</b> สายด่วนสุขภาพจิต ฟรี 24 ชั่วโมง หรือ <b>1669</b> กรณีฉุกเฉิน คุณไม่ได้อยู่คนเดียวนะ',
+    to:'ถึง {name}',
+    toDefault:'ถึง คนเก่งที่กำลังอ่านอยู่',
+    exFoot:'เล่าเรื่องหนักใจ แล้วรับการ์ดของคุณได้ที่ happymai',
+    tShort:'เล่าให้ฟังอีกนิดนะ',
+    tSaved:'บันทึกการ์ดเรียบร้อย',
+    tFail:'บันทึกไม่สำเร็จ ลองใหม่อีกครั้งนะ',
+    tLib:'โหลดเครื่องมือบันทึกรูปไม่สำเร็จ ลองใหม่อีกครั้ง',
+    soundAria:'เปิดหรือปิดเสียง'
+  },
+  en:{
+    title:'happymai — a quiet place for heavy hearts',
+    lead:'How has your day been? You can tell me about it.<br>No one will judge you here.',
+    start:'Start sharing',
+    fine:'What you share will never be made public.',
+    writeH:'Leave what weighs on you here',
+    writeP:'No need to make it pretty. Just write the way you feel.',
+    nickL:'What should we call you? <em>(optional)</em>',
+    nickPh:'Your nickname',
+    storyL:'What’s on your mind? Let it all out.',
+    storyPh:'Today I feel...',
+    released:'You’ve let it go.',
+    private:'Only seen by the site owner',
+    send:'Let it go',
+    pickH:'Choose the card your heart wants to open',
+    pickSub:'Take a deep breath and pick the one that feels right',
+    hint:'All {n} cards are waiting for you. There is no wrong choice.',
+    cardAria:'Card {i} of {n}',
+    save:'Save card as image',
+    saving:'Creating image...',
+    again:'Share something else',
+    care:'If you don’t feel safe right now, please call <b>1323</b>, Thailand’s free 24-hour mental health hotline, or <b>1669</b> for emergencies. Outside Thailand, please contact your local emergency number. You are not alone.',
+    to:'To {name}',
+    toDefault:'To the brave one reading this',
+    exFoot:'Share what weighs on you and receive your card at happymai',
+    tShort:'Tell me a little more',
+    tSaved:'Card saved',
+    tFail:'Couldn’t save the card. Please try again.',
+    tLib:'Couldn’t load the image tool. Please try again.',
+    soundAria:'Toggle sound'
+  }
+};
+let lang = localStorage.getItem('hm_lang') || ((navigator.language||'').toLowerCase().startsWith('th') ? 'th' : 'en');
+const tr=(k,vars={})=>(I18N[lang][k]||'').replace(/\{(\w+)\}/g,(_,v)=>vars[v]??'');
+
 /* ========= ข้อมูลการ์ด ========= */
 const CATS = {
-  study:{no:'IX',name:'The Scholar',th:'ผู้เรียนรู้',label:'การเรียน',sub:'การ์ดสำหรับใจที่เหนื่อยกับการเรียน',
-    keys:['เรียน','สอบ','เกรด','การบ้าน','ครู','อาจารย์','มหาลัย','มหาวิทยาลัย','โรงเรียน','ติว','วิทยานิพนธ์','ธีสิส','tcas','ทีแคส','gpa','คณะ','ซิ่ว','ควิซ','มิดเทอม','ไฟนอล','midterm','final','เทอม','แอดมิชชั่น'],
-    msgs:['เกรดเป็นแค่ตัวเลขที่วัดวันหนึ่งของคุณ มันวัดไม่ได้ว่าคุณพยายามมากแค่ไหน และไม่ได้บอกว่าคุณจะไปได้ไกลแค่ไหน',
+  study:{no:'IX',name:'The Scholar',label:'การเรียน',
+    tag:{th:'ผู้เรียนรู้',en:'patience · growth'},
+    sub:{th:'การ์ดสำหรับใจที่เหนื่อยกับการเรียน',en:'A card for a mind tired of studying'},
+    keys:['เรียน','สอบ','เกรด','การบ้าน','ครู','อาจารย์','มหาลัย','มหาวิทยาลัย','โรงเรียน','ติว','วิทยานิพนธ์','ธีสิส','tcas','ทีแคส','gpa','คณะ','ซิ่ว','ควิซ','มิดเทอม','ไฟนอล','midterm','final','เทอม','แอดมิชชั่น',
+      'study','studying','exam','test','grade','homework','school','university','college','teacher','professor','class','thesis','assignment','quiz','semester','lecture'],
+    msgs:{th:['เกรดเป็นแค่ตัวเลขที่วัดวันหนึ่งของคุณ มันวัดไม่ได้ว่าคุณพยายามมากแค่ไหน และไม่ได้บอกว่าคุณจะไปได้ไกลแค่ไหน',
       'ไม่เป็นไรเลยถ้าวันนี้ยังไม่เข้าใจ คนเก่งทุกคนเคยงงในเรื่องที่ตอนนี้เขาอธิบายได้คล่อง',
       'พักสายตาสักห้านาที ดื่มน้ำสักแก้ว สมองที่ได้พักจะจำได้ดีกว่าสมองที่ถูกบังคับ',
       'การสอบครั้งนี้ไม่ใช่บทสรุปของชีวิต มันเป็นแค่หนึ่งบรรทัดในหนังสือเล่มยาวที่คุณกำลังเขียน',
       'อย่าเอาบทแรกของตัวเองไปเทียบกับบทที่ยี่สิบของคนอื่น ทุกคนเดินในจังหวะของตัวเอง',
-      'ความพยายามที่ไม่มีใครเห็นในคืนนี้ จะกลายเป็นความมั่นใจที่ทุกคนเห็นในวันหนึ่ง']},
-  work:{no:'VII',name:'The Builder',th:'ผู้สร้าง',label:'การงาน',sub:'การ์ดสำหรับคนที่แบกงานไว้เยอะ',
-    keys:['งาน','หัวหน้า','เจ้านาย','บอส','ออฟฟิศ','บริษัท','เงินเดือน','ลาออก','ประชุม','เดดไลน์','deadline','โปรเจกต์','โปรเจค','ลูกค้า','เพื่อนร่วมงาน','โอที','สัมภาษณ์','ตกงาน','อาชีพ','kpi'],
-    msgs:['คุณมีค่ามากกว่าผลงานที่ส่งในแต่ละวัน และมากกว่าคำติของใครบางคนในห้องประชุม',
+      'ความพยายามที่ไม่มีใครเห็นในคืนนี้ จะกลายเป็นความมั่นใจที่ทุกคนเห็นในวันหนึ่ง'],
+    en:['A grade is just a number that measures one day of your life. It can’t measure how hard you tried, or how far you will go.',
+      'It’s okay if it doesn’t make sense yet. Everyone who is good at this was once confused by the very thing they now explain with ease.',
+      'Rest your eyes for five minutes and drink some water. A rested mind remembers more than a forced one.',
+      'This exam is not the ending of your story. It’s just one line in a long book you are still writing.',
+      'Don’t compare your chapter one to someone else’s chapter twenty. Everyone walks at their own pace.',
+      'The effort no one sees tonight will become the confidence everyone sees one day.']}},
+  work:{no:'VII',name:'The Builder',label:'การงาน',
+    tag:{th:'ผู้สร้าง',en:'strength · purpose'},
+    sub:{th:'การ์ดสำหรับคนที่แบกงานไว้เยอะ',en:'A card for someone carrying too much work'},
+    keys:['งาน','หัวหน้า','เจ้านาย','บอส','ออฟฟิศ','บริษัท','เงินเดือน','ลาออก','ประชุม','เดดไลน์','deadline','โปรเจกต์','โปรเจค','ลูกค้า','เพื่อนร่วมงาน','โอที','สัมภาษณ์','ตกงาน','อาชีพ','kpi',
+      'job','boss','manager','office','salary','meeting','client','coworker','colleague','career','fired','interview','overtime','workload','promotion'],
+    msgs:{th:['คุณมีค่ามากกว่าผลงานที่ส่งในแต่ละวัน และมากกว่าคำติของใครบางคนในห้องประชุม',
       'งานที่ยังไม่เสร็จจะยังรออยู่ตรงนั้น แต่ใจและร่างกายของคุณไม่ควรต้องรอให้งานเสร็จก่อนถึงจะได้พัก',
       'การรู้สึกท้อกับงาน ไม่ได้แปลว่าคุณไม่เก่ง มันแปลว่าคุณแบกอะไรไว้เยอะมากจริงๆ',
       'บางวัน แค่ทำงานจนครบวันได้ ก็นับว่าเก่งมากแล้ว',
       'ถ้าที่ไหนทำให้คุณรู้สึกเล็กลงทุกวัน คุณมีสิทธิ์เลือกที่ที่ทำให้คุณได้เติบโต',
-      'ทุกอย่างที่คุณทำวันนี้ แม้จะเล็กแค่ไหน คืออิฐอีกก้อนที่กำลังก่อเป็นอนาคตของคุณ']},
-  love:{no:'VI',name:'The Heart',th:'หัวใจ',label:'ความรัก',sub:'การ์ดสำหรับหัวใจที่กำลังเจ็บ',
-    keys:['แฟน','เลิก','ความรัก','รัก','คนคุย','อกหัก','นอกใจ','มือที่สาม','โสด','ง้อ','คิดถึงเขา','แอบชอบ','คนที่ชอบ','ชอบเขา','เขาไม่','ทิ้ง','crush','เทใจ'],
-    msgs:['การที่ใครสักคนไม่เห็นค่าคุณ ไม่ได้ทำให้คุณมีค่าน้อยลงแม้แต่นิดเดียว',
+      'ทุกอย่างที่คุณทำวันนี้ แม้จะเล็กแค่ไหน คืออิฐอีกก้อนที่กำลังก่อเป็นอนาคตของคุณ'],
+    en:['You are worth more than the work you hand in each day, and more than anyone’s criticism in a meeting room.',
+      'Unfinished work will still be there tomorrow. Your mind and body shouldn’t have to wait for it to be done before they get to rest.',
+      'Feeling discouraged at work doesn’t mean you are not good enough. It means you have been carrying a lot.',
+      'Some days, simply making it through the workday is already a real achievement.',
+      'If a place makes you feel smaller every day, you have every right to choose one where you can grow.',
+      'Everything you did today, however small, is another brick in the future you are building.']}},
+  love:{no:'VI',name:'The Heart',label:'ความรัก',
+    tag:{th:'หัวใจ',en:'tenderness · healing'},
+    sub:{th:'การ์ดสำหรับหัวใจที่กำลังเจ็บ',en:'A card for a hurting heart'},
+    keys:['แฟน','เลิก','ความรัก','รัก','คนคุย','อกหัก','นอกใจ','มือที่สาม','โสด','ง้อ','คิดถึงเขา','แอบชอบ','คนที่ชอบ','ชอบเขา','เขาไม่','ทิ้ง','crush','เทใจ',
+      'boyfriend','girlfriend','breakup','break up','broke up','heartbreak','heartbroken','cheated','relationship','partner','dating','in love','my ex'],
+    msgs:{th:['การที่ใครสักคนไม่เห็นค่าคุณ ไม่ได้ทำให้คุณมีค่าน้อยลงแม้แต่นิดเดียว',
       'คิดถึงก็ได้ ร้องไห้ก็ได้ ไม่ต้องรีบหายดี หัวใจมีเวลาของมันเอง',
       'คุณสมควรได้รับความรักที่ไม่ทำให้ต้องเดาใจกันทุกวัน',
       'บางคนเข้ามาเพื่อสอน ไม่ได้เข้ามาเพื่ออยู่ บทเรียนนั้นเจ็บ แต่จะทำให้คุณรักตัวเองเป็นมากขึ้น',
       'ความรักที่ดีที่สุดที่คุณจะได้รับ เริ่มต้นจากความอ่อนโยนที่คุณมีให้ตัวเอง',
-      'วันหนึ่งคุณจะนึกถึงเรื่องนี้แล้วยิ้มได้โดยไม่เจ็บ วันนั้นจะมาถึงแน่นอน']},
-  family:{no:'IV',name:'The Home',th:'บ้าน',label:'ครอบครัว',sub:'การ์ดสำหรับเรื่องในบ้านที่พูดยาก',
-    keys:['พ่อ','แม่','ครอบครัว','ที่บ้าน','คนในบ้าน','กลับบ้าน','ผู้ปกครอง','ญาติ','ยาย','พี่สาว','พี่ชาย','น้องสาว','น้องชาย','สามี','ภรรยา'],
-    msgs:['การรักครอบครัว กับการเหนื่อยกับครอบครัว เกิดขึ้นพร้อมกันได้ ไม่ได้แปลว่าคุณเป็นคนไม่ดี',
+      'วันหนึ่งคุณจะนึกถึงเรื่องนี้แล้วยิ้มได้โดยไม่เจ็บ วันนั้นจะมาถึงแน่นอน'],
+    en:['Someone failing to see your worth doesn’t make you worth any less.',
+      'Miss them if you need to. Cry if you need to. There is no rush to heal; the heart keeps its own time.',
+      'You deserve a love that doesn’t leave you guessing every day.',
+      'Some people come into our lives to teach, not to stay. The lesson hurts, but it will teach you to love yourself better.',
+      'The best love you will ever receive begins with the gentleness you give yourself.',
+      'One day you will look back on this and smile without it hurting. That day will come.']}},
+  family:{no:'IV',name:'The Home',label:'ครอบครัว',
+    tag:{th:'บ้าน',en:'roots · belonging'},
+    sub:{th:'การ์ดสำหรับเรื่องในบ้านที่พูดยาก',en:'A card for the things at home that are hard to say'},
+    keys:['พ่อ','แม่','ครอบครัว','ที่บ้าน','คนในบ้าน','กลับบ้าน','ผู้ปกครอง','ญาติ','ยาย','พี่สาว','พี่ชาย','น้องสาว','น้องชาย','สามี','ภรรยา',
+      'mom','mum','dad','mother','father','parent','family','brother','sister','husband','wife','relatives','grandma','grandpa'],
+    msgs:{th:['การรักครอบครัว กับการเหนื่อยกับครอบครัว เกิดขึ้นพร้อมกันได้ ไม่ได้แปลว่าคุณเป็นคนไม่ดี',
       'คุณไม่จำเป็นต้องแบกความคาดหวังของทุกคนไว้คนเดียว',
       'บางครั้งคนที่รักเรา ก็แสดงออกในแบบที่ทำให้เราเจ็บ ทั้งที่เขาไม่ได้ตั้งใจ',
       'ถ้าบ้านยังไม่ใช่ที่ที่ปลอดภัย ขอให้คุณได้สร้างมุมปลอดภัยเล็กๆ ของตัวเอง ในใจ หรือกับคนที่เข้าใจ',
       'คุณมีสิทธิ์ตั้งขอบเขต แม้กับคนที่ใกล้ชิดที่สุด นั่นคือการดูแลตัวเอง ไม่ใช่การไม่รัก',
-      'บ้านไม่ได้มีแค่ที่ที่เราเกิด แต่ยังเป็นผู้คนที่ทำให้เรารู้สึกว่าได้เป็นตัวเอง']},
-  money:{no:'X',name:'The Seed',th:'เมล็ดพันธุ์',label:'การเงิน',sub:'การ์ดสำหรับช่วงที่การเงินตึงมือ',
-    keys:['เงิน','หนี้','ผ่อน','ค่าเทอม','ค่าเช่า','ค่าใช้จ่าย','ไม่พอใช้','ยากจน','ไม่มีเงิน','ยืมเงิน','บัตรเครดิต','ดอกเบี้ย','ขาดทุน','ชักหน้าไม่ถึงหลัง'],
-    msgs:['ช่วงที่การเงินตึงมือ ไม่ได้บอกว่าคุณล้มเหลว มันบอกแค่ว่าตอนนี้เป็นฤดูที่ต้องอดทน',
+      'บ้านไม่ได้มีแค่ที่ที่เราเกิด แต่ยังเป็นผู้คนที่ทำให้เรารู้สึกว่าได้เป็นตัวเอง'],
+    en:['You can love your family and be exhausted by them at the same time. It doesn’t make you a bad person.',
+      'You don’t have to carry everyone’s expectations on your own.',
+      'Sometimes the people who love us show it in ways that hurt, even when they don’t mean to.',
+      'If home doesn’t feel safe yet, may you find a small safe place of your own, in your heart or with people who understand.',
+      'You are allowed to set boundaries, even with those closest to you. That is self-care, not a lack of love.',
+      'Home isn’t only where you were born. It’s also the people who let you be yourself.']}},
+  money:{no:'X',name:'The Seed',label:'การเงิน',
+    tag:{th:'เมล็ดพันธุ์',en:'patience · renewal'},
+    sub:{th:'การ์ดสำหรับช่วงที่การเงินตึงมือ',en:'A card for when money feels tight'},
+    keys:['เงิน','หนี้','ผ่อน','ค่าเทอม','ค่าเช่า','ค่าใช้จ่าย','ไม่พอใช้','ยากจน','ไม่มีเงิน','ยืมเงิน','บัตรเครดิต','ดอกเบี้ย','ขาดทุน','ชักหน้าไม่ถึงหลัง',
+      'money','debt','loan','rent','bills','tuition','credit card','afford','expenses','savings','financial','paycheck'],
+    msgs:{th:['ช่วงที่การเงินตึงมือ ไม่ได้บอกว่าคุณล้มเหลว มันบอกแค่ว่าตอนนี้เป็นฤดูที่ต้องอดทน',
       'ค่อยๆ แก้ทีละเรื่อง ทีละเดือน เมล็ดที่ปลูกวันนี้อาจยังไม่งอก แต่มันกำลังหยั่งราก',
       'คุณค่าของตัวคุณ ไม่เคยขึ้นอยู่กับตัวเลขในบัญชี',
       'ลองเขียนสิ่งที่กังวลลงกระดาษ ปัญหาที่ถูกมองเห็นชัดๆ มักดูเล็กลงกว่าตอนที่วนอยู่ในหัว',
       'การขอความช่วยเหลือไม่ใช่เรื่องน่าอาย คนที่ผ่านช่วงยากมาได้ ส่วนใหญ่ไม่ได้ผ่านมาคนเดียว',
-      'วันที่ลำบากแบบนี้จะผ่านไป และคุณจะภูมิใจที่ประคองตัวเองมาได้']},
-  lonely:{no:'XVII',name:'The Star',th:'ดวงดาว',label:'ความเหงา',sub:'การ์ดสำหรับคืนที่รู้สึกเหงา',
-    keys:['เหงา','คนเดียว','ไม่มีใคร','โดดเดี่ยว','ไม่มีเพื่อน','เพื่อน','ถูกเมิน','โดนเมิน','ไม่เข้าพวก','อ้างว้าง','ไม่มีที่ยืน','ไม่มีใครเข้าใจ'],
-    msgs:['แม้จะรู้สึกเหมือนอยู่คนเดียว แต่ตอนนี้มีคนที่ตั้งใจเขียนการ์ดใบนี้ไว้รอคุณอยู่',
+      'วันที่ลำบากแบบนี้จะผ่านไป และคุณจะภูมิใจที่ประคองตัวเองมาได้'],
+    en:['A tight season with money doesn’t mean you have failed. It just means this is a season for patience.',
+      'Take it one thing, one month at a time. A seed planted today may not sprout yet, but it is already taking root.',
+      'Your worth has never depended on the numbers in your account.',
+      'Try writing your worries down on paper. Problems seen clearly often look smaller than the ones circling in your head.',
+      'Asking for help is nothing to be ashamed of. Most people who made it through hard times didn’t do it alone.',
+      'These difficult days will pass, and you will be proud of how you held yourself together.']}},
+  lonely:{no:'XVII',name:'The Star',label:'ความเหงา',
+    tag:{th:'ดวงดาว',en:'hope · connection'},
+    sub:{th:'การ์ดสำหรับคืนที่รู้สึกเหงา',en:'A card for a lonely night'},
+    keys:['เหงา','คนเดียว','ไม่มีใคร','โดดเดี่ยว','ไม่มีเพื่อน','เพื่อน','ถูกเมิน','โดนเมิน','ไม่เข้าพวก','อ้างว้าง','ไม่มีที่ยืน','ไม่มีใครเข้าใจ',
+      'lonely','loneliness','alone','no friends','friend','isolated','left out','ignored','nobody','no one understands'],
+    msgs:{th:['แม้จะรู้สึกเหมือนอยู่คนเดียว แต่ตอนนี้มีคนที่ตั้งใจเขียนการ์ดใบนี้ไว้รอคุณอยู่',
       'ดาวแต่ละดวงอยู่ห่างกันมาก แต่ก็ยังส่องแสงอยู่บนฟ้าผืนเดียวกัน คุณไม่ได้โดดเดี่ยวอย่างที่คิด',
       'การมีเพื่อนน้อย ไม่ได้แปลว่าคุณไม่น่ารัก บางทีคุณแค่ยังไม่เจอคนที่ใช่',
       'ลองส่งข้อความหาใครสักคนวันนี้ แค่คำว่า "เป็นไงบ้าง" ก็อาจเปิดประตูได้ทั้งสองฝั่ง',
       'ช่วงที่ต้องอยู่กับตัวเอง คือโอกาสได้รู้จักคนที่จะอยู่กับคุณไปตลอดชีวิต ซึ่งก็คือตัวคุณเอง',
-      'คุณคู่ควรกับการมีคนรับฟัง และวันนี้ ที่นี่ฟังคุณอยู่']},
-  tired:{no:'XVIII',name:'The Moon',th:'พระจันทร์',label:'ความเหนื่อยล้า',sub:'การ์ดสำหรับคนที่เหนื่อยมามาก',
-    keys:['เหนื่อย','ท้อ','หมดไฟ','หมดแรง','ไม่ไหว','นอนไม่หลับ','ป่วย','เครียด','burnout','เบื่อ','อ่อนล้า','หมดพลัง','ร้องไห้','กดดัน','กังวล','วิตก'],
-    msgs:['พักได้นะ การพักไม่ใช่การยอมแพ้ มันคือการเติมแรงเพื่อไปต่อ',
+      'คุณคู่ควรกับการมีคนรับฟัง และวันนี้ ที่นี่ฟังคุณอยู่'],
+    en:['Even if you feel alone, someone wrote this card with care, waiting for you to find it.',
+      'Stars are far apart, yet they all shine in the same sky. You are not as alone as you think.',
+      'Having few friends doesn’t mean you are hard to love. Maybe you just haven’t met your people yet.',
+      'Try messaging someone today. Even a simple “how have you been?” can open a door on both sides.',
+      'Time alone is a chance to know the one person who will be with you for life: you.',
+      'You deserve to be heard, and today, right here, someone is listening.']}},
+  tired:{no:'XVIII',name:'The Moon',label:'ความเหนื่อยล้า',
+    tag:{th:'พระจันทร์',en:'rest · renewal'},
+    sub:{th:'การ์ดสำหรับคนที่เหนื่อยมามาก',en:'A card for someone who has been tired for too long'},
+    keys:['เหนื่อย','ท้อ','หมดไฟ','หมดแรง','ไม่ไหว','นอนไม่หลับ','ป่วย','เครียด','burnout','เบื่อ','อ่อนล้า','หมดพลัง','ร้องไห้','กดดัน','กังวล','วิตก',
+      'tired','exhausted','burned out','burnt out','stress','anxious','anxiety','overwhelmed','crying','insomnia','can\'t sleep','sick','pressure','worried','drained','give up'],
+    msgs:{th:['พักได้นะ การพักไม่ใช่การยอมแพ้ มันคือการเติมแรงเพื่อไปต่อ',
       'แม้แต่พระจันทร์ก็ยังมีคืนที่ไม่เต็มดวง และไม่มีใครบอกว่ามันไม่สวย',
       'วันนี้คุณไม่จำเป็นต้องเก่ง แค่ผ่านไปให้ได้ก็พอแล้ว',
       'ถ้าไม่ไหวจริงๆ วางทุกอย่างลงสักครู่ หายใจเข้าลึกๆ โลกรอคุณได้',
       'ความเหนื่อยที่คุณรู้สึก คือหลักฐานว่าคุณสู้มาไกลแค่ไหน',
-      'คืนนี้นอนเร็วขึ้นสักนิดนะ พรุ่งนี้คือวันใหม่ที่ยังไม่มีอะไรผิดพลาด']},
-  general:{no:'XIX',name:'The Sun',th:'พระอาทิตย์',label:'ทั่วไป',sub:'การ์ดที่ตั้งใจส่งถึงคุณวันนี้',
-    msgs:['คุณผ่านวันที่แย่ที่สุดมาได้ทุกครั้ง ครั้งนี้ก็เช่นกัน',
+      'คืนนี้นอนเร็วขึ้นสักนิดนะ พรุ่งนี้คือวันใหม่ที่ยังไม่มีอะไรผิดพลาด'],
+    en:['You are allowed to rest. Resting isn’t giving up; it’s how you refill to keep going.',
+      'Even the moon has nights when it isn’t full, and no one says it is any less beautiful.',
+      'You don’t have to be amazing today. Just getting through it is enough.',
+      'If it all feels like too much, set everything down for a moment and breathe deeply. The world can wait for you.',
+      'The tiredness you feel is proof of how hard you have been fighting.',
+      'Go to bed a little earlier tonight. Tomorrow is a new day with no mistakes in it yet.']}},
+  general:{no:'XIX',name:'The Sun',label:'ทั่วไป',
+    tag:{th:'พระอาทิตย์',en:'warmth · light'},
+    sub:{th:'การ์ดที่ตั้งใจส่งถึงคุณวันนี้',en:'A card meant just for you today'},
+    msgs:{th:['คุณผ่านวันที่แย่ที่สุดมาได้ทุกครั้ง ครั้งนี้ก็เช่นกัน',
       'ความรู้สึกของคุณสำคัญเสมอ ไม่มีเรื่องไหนเล็กเกินไปที่จะทำให้เสียใจ',
       'ไม่ต้องรีบรู้สึกดีขึ้น แค่วันนี้เข้าใจตัวเองมากขึ้นอีกนิดก็พอ',
       'พายุไม่เคยอยู่ตลอดไป ฟ้าหลังฝนมักจะใสกว่าที่เคย',
       'ขอบคุณที่ยังอยู่ตรงนี้ และยังพยายาม แม้ในวันที่มันยาก',
       'ใจดีกับตัวเองให้มากเท่าที่คุณใจดีกับคนอื่นนะ',
       'คุณไม่จำเป็นต้องมีคำตอบให้ทุกอย่างวันนี้ ค่อยๆ ไปทีละก้าวก็พอ',
-      'สิ่งที่คุณรู้สึกอยู่ตอนนี้ไม่ใช่ตัวตนทั้งหมดของคุณ มันเป็นแค่สภาพอากาศของวันนี้']},
-  care:{no:'XI',name:'The Lantern',th:'ตะเกียง',label:'เฝ้าระวัง',sub:'การ์ดใบนี้อยากอยู่ข้างคุณ',
-    msgs:['ขอบคุณที่ยังเล่าให้ฟัง ความเจ็บปวดที่คุณรู้สึกเป็นเรื่องจริงและสำคัญ คุณไม่ต้องผ่านมันคนเดียว โทรคุยกับสายด่วนสุขภาพจิต 1323 ได้ตลอด 24 ชั่วโมง ไม่มีค่าใช้จ่าย',
-      'ตอนนี้อาจมืดจนมองไม่เห็นทาง แต่ความรู้สึกนี้เปลี่ยนได้ และมีคนพร้อมช่วยคุณจริงๆ โทร 1323 หรือบอกคนที่ไว้ใจสักคนนะ คุณมีค่ามากกว่าที่คิด']}
+      'สิ่งที่คุณรู้สึกอยู่ตอนนี้ไม่ใช่ตัวตนทั้งหมดของคุณ มันเป็นแค่สภาพอากาศของวันนี้'],
+    en:['You have survived every bad day so far. This one will be no different.',
+      'Your feelings always matter. No sadness is too small to count.',
+      'You don’t have to feel better right away. Understanding yourself a little more today is enough.',
+      'Storms never last forever, and the sky after rain is often clearer than before.',
+      'Thank you for still being here and still trying, even when it’s hard.',
+      'Be as kind to yourself as you are to everyone else.',
+      'You don’t need every answer today. One step at a time is enough.',
+      'What you feel right now isn’t all of who you are. It’s just today’s weather.']}},
+  care:{no:'XI',name:'The Lantern',label:'เฝ้าระวัง',
+    tag:{th:'ตะเกียง',en:'light in the dark'},
+    sub:{th:'การ์ดใบนี้อยากอยู่ข้างคุณ',en:'This card wants to stay beside you'},
+    msgs:{th:['ขอบคุณที่ยังเล่าให้ฟัง ความเจ็บปวดที่คุณรู้สึกเป็นเรื่องจริงและสำคัญ คุณไม่ต้องผ่านมันคนเดียว โทรคุยกับสายด่วนสุขภาพจิต 1323 ได้ตลอด 24 ชั่วโมง ไม่มีค่าใช้จ่าย',
+      'ตอนนี้อาจมืดจนมองไม่เห็นทาง แต่ความรู้สึกนี้เปลี่ยนได้ และมีคนพร้อมช่วยคุณจริงๆ โทร 1323 หรือบอกคนที่ไว้ใจสักคนนะ คุณมีค่ามากกว่าที่คิด'],
+    en:['Thank you for sharing this. The pain you feel is real, and it matters. You don’t have to face it alone. In Thailand, call the mental health hotline 1323, free, 24 hours a day.',
+      'It may feel too dark to see a way forward right now, but this feeling can change, and there are people who truly want to help. Call 1323 or reach out to someone you trust. You matter more than you know.']}}
 };
-const CARE_KEYS=['อยากตาย','ฆ่าตัวตาย','ไม่อยากอยู่แล้ว','ไม่อยากมีชีวิต','จบชีวิต','ทำร้ายตัวเอง','กรีดแขน','ไม่อยากตื่น','หายไปจากโลก','อยากหายไป','suicide','killmyself'];
+const CARE_KEYS=['อยากตาย','ฆ่าตัวตาย','ไม่อยากอยู่แล้ว','ไม่อยากมีชีวิต','จบชีวิต','ทำร้ายตัวเอง','กรีดแขน','ไม่อยากตื่น','หายไปจากโลก','อยากหายไป',
+  'suicide','suicidal','killmyself','wanttodie','endmylife','endit all','selfharm','self-harm','hurtmyself','cutmyself',"don'twanttolive",'dontwanttolive','nothingtolivefor','bettergone'];
 
 const ICONS={
   study:'<path d="M8 16c12-4 20-2 24 4 4-6 12-8 24-4v32c-12-4-20-2-24 4-4-6-12-8-24-4z"/><path d="M32 20v32"/>',
@@ -492,9 +669,9 @@ function shuffleSound(){for(let i=0;i<DECK_SIZE;i++)bell(rand(1500,2100),.35+i*.
 
 /* ========= วิเคราะห์หมวด ========= */
 function detect(text){
-  const t=text.toLowerCase().replace(/แม่ง|พ่อง/g,' ');
+  const t=text.toLowerCase().replace(/[’‘]/g,"'").replace(/แม่ง|พ่อง/g,' ');
   const compact=t.replace(/\s+/g,'');
-  if(CARE_KEYS.some(k=>compact.includes(k)))return 'care';
+  if(CARE_KEYS.some(k=>compact.includes(k.replace(/\s+/g,''))))return 'care';
   let best='general',score=0;
   for(const [k,c] of Object.entries(CATS)){
     if(!c.keys)continue;let s=0;
@@ -503,8 +680,13 @@ function detect(text){
   }
   return best;
 }
-let lastMsg='';
-function pickMsg(list){let m;do{m=list[Math.floor(Math.random()*list.length)]}while(list.length>1&&m===lastMsg);lastMsg=m;return m}
+let lastPick='';
+function pickIdx(cat){
+  const n=CATS[cat].msgs.th.length;let i;
+  do{i=Math.floor(Math.random()*n)}while(n>1&&cat+i===lastPick);
+  lastPick=cat+i;return i;
+}
+const msgOf=c=>c.data.msgs[lang][c.idx];
 
 /* ========= Google Sheets ========= */
 function saveToSheet(p){
@@ -525,11 +707,11 @@ storyEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const story=storyEl.value.trim();
-  if(story.length<3){form.classList.remove('shake');void form.offsetWidth;form.classList.add('shake');toast('เล่าให้ฟังอีกนิดนะ');return}
+  if(story.length<3){form.classList.remove('shake');void form.offsetWidth;form.classList.add('shake');toast(tr('tShort'));return}
   sendBtn.disabled=true;storyEl.readOnly=true;nickEl.readOnly=true;
   const cat=detect(story),data=CATS[cat];
-  current={cat,data,msg:pickMsg(data.msgs),name:nickEl.value.trim()};
-  saveToSheet({name:current.name,story,category:data.label,card:`${data.name} (${data.th})`,message:current.msg,flag:cat==='care'?'care':''});
+  current={cat,data,idx:pickIdx(cat),name:nickEl.value.trim(),done:false};
+  saveToSheet({name:current.name,story,category:data.label,card:`${data.name} (${data.tag.th})`,message:msgOf(current),flag:cat==='care'?'care':'',lang});
   whoosh();
   await releaseText(storyEl.value);
   buildDeck();
@@ -572,14 +754,14 @@ function buildDeck(){
   deck.innerHTML='';delete deck.dataset.locked;
   const mid=(DECK_SIZE-1)/2,spread=Math.min(8,48/DECK_SIZE*1.2);
   for(let i=0;i<DECK_SIZE;i++){
-    const t=i-mid;
+    const off=i-mid;
     const b=document.createElement('button');b.className='mini';
-    b.style.setProperty('--t',t);
-    b.style.setProperty('--r',(t*spread).toFixed(2)+'deg');
-    b.style.setProperty('--y',(t*t*4.5).toFixed(1)+'px');
+    b.style.setProperty('--t',off);
+    b.style.setProperty('--r',(off*spread).toFixed(2)+'deg');
+    b.style.setProperty('--y',(off*off*4.5).toFixed(1)+'px');
     b.style.setProperty('--d',(.6+i*.08)+'s');
     b.style.zIndex=i+1;
-    b.setAttribute('aria-label',`การ์ดใบที่ ${i+1} จาก ${DECK_SIZE}`);
+    b.setAttribute('aria-label',tr('cardAria',{i:i+1,n:DECK_SIZE}));
     b.innerHTML=`<div class="cardback">${BACK_SVG}</div>`;
     b.onclick=()=>choose(b);deck.appendChild(b);
   }
@@ -601,20 +783,21 @@ function fillCard(root,cur,full){
   root.querySelector('.t-no').textContent='No. '+d.no;
   root.querySelector('.t-sym').innerHTML=iconSVG(cur.cat,'#b8874a');
   root.querySelector('.t-name').textContent=d.name;
-  root.querySelector('.t-th').textContent=d.th;
-  root.querySelector('.t-to').textContent=cur.name?`ถึง ${cur.name}`:'ถึง คนเก่งที่กำลังอ่านอยู่';
-  root.querySelector('.t-text').textContent=full?cur.msg:'';
+  root.querySelector('.t-th').textContent=d.tag[lang];
+  root.querySelector('.t-to').textContent=cur.name?tr('to',{name:cur.name}):tr('toDefault');
+  root.querySelector('.t-text').textContent=full?msgOf(cur):'';
   root.querySelector('.t-sign').classList.toggle('show',!!full);
 }
 function prepareCard(){
+  current.done=false;
   card3d.style.transition='none';card3d.classList.remove('flipped');void card3d.offsetWidth;card3d.style.transition='';
   $('#halo').classList.remove('on');$('#actions').classList.remove('show');$('#careNote').classList.remove('show');
-  $('#revealTitle').textContent=current.data.sub;fillCard(liveTarot(),current,false);
+  $('#revealTitle').textContent=current.data.sub[lang];fillCard(liveTarot(),current,false);
 }
 function flipCard(){
   card3d.classList.add('flipped');
   setTimeout(()=>{const r=card3d.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2);chime();$('#halo').classList.add('on')},520);
-  setTimeout(()=>typeWriter(liveTarot().querySelector('.t-text'),current.msg,onTyped),1400);
+  setTimeout(()=>typeWriter(liveTarot().querySelector('.t-text'),msgOf(current),onTyped),1400);
 }
 function typeWriter(el,text,done){
   const g=graphemes(text);el.textContent='';
@@ -626,9 +809,36 @@ function typeWriter(el,text,done){
 function tick(){const c=actx;if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime;o.type='sine';o.frequency.value=rand(1800,2400);g.gain.setValueAtTime(.012,t);g.gain.exponentialRampToValueAtTime(.0001,t+.06);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+.07)}
 card3d.addEventListener('click',()=>{if(typing)typing.finish()});
 function onTyped(){
+  current.done=true;
   liveTarot().querySelector('.t-sign').classList.add('show');
   setTimeout(()=>{$('#actions').classList.add('show');if(current.cat==='care')$('#careNote').classList.add('show')},600);
 }
+
+/* ========= ภาษา ========= */
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.title=tr('title');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n,{n:DECK_SIZE})});
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{el.innerHTML=tr(el.dataset.i18nHtml)});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=tr(el.dataset.i18nPh)});
+  $('#soundBtn').setAttribute('aria-label',tr('soundAria'));
+  const sw=$('#langSwitch');sw.dataset.active=lang;
+  sw.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
+  deck.querySelectorAll('.mini').forEach((m,i)=>m.setAttribute('aria-label',tr('cardAria',{i:i+1,n:DECK_SIZE})));
+  if(current&&currentScreen.id==='reveal'){
+    if(typing)typing.finish();
+    $('#revealTitle').textContent=current.data.sub[lang];
+    fillCard(liveTarot(),current,current.done);
+  }
+}
+function setLang(l){
+  if(l===lang)return;
+  lang=l;localStorage.setItem('hm_lang',l);bell(1318.5,0,.05,.8);
+  document.body.classList.add('swapping');
+  setTimeout(()=>{applyLang();document.body.classList.remove('swapping')},reduced?0:260);
+}
+$('#langSwitch').querySelectorAll('button').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+applyLang();
 
 /* ========= ปุ่มท้าย ========= */
 $('#againBtn').onclick=()=>{
@@ -638,10 +848,10 @@ $('#againBtn').onclick=()=>{
 };
 $('#saveBtn').onclick=async()=>{
   const btn=$('#saveBtn');
-  if(!window.html2canvas){toast('โหลดเครื่องมือบันทึกรูปไม่สำเร็จ ลองใหม่อีกครั้ง');return}
-  btn.disabled=true;const label=btn.textContent;btn.textContent='กำลังสร้างรูป...';
+  if(!window.html2canvas){toast(tr('tLib'));return}
+  btn.disabled=true;btn.textContent=tr('saving');
   try{
-    fillCard($('#exCard .tarot'),current,true);$('#exSub').textContent=current.data.sub;
+    fillCard($('#exCard .tarot'),current,true);$('#exSub').textContent=current.data.sub[lang];
     await document.fonts.ready;
     const canvas=await html2canvas($('#exportCard'),{scale:2,backgroundColor:'#130f30',logging:false,
       onclone:doc=>{doc.getElementById('exportCard').style.left='0'}});
@@ -650,9 +860,9 @@ $('#saveBtn').onclick=async()=>{
     const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if(mobile&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'happymai'})}
     else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='happymai-card.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
-    toast('บันทึกการ์ดเรียบร้อย');
-  }catch(err){if(err&&err.name!=='AbortError')toast('บันทึกไม่สำเร็จ ลองใหม่อีกครั้งนะ')}
-  finally{btn.disabled=false;btn.textContent=label}
+    toast(tr('tSaved'));
+  }catch(err){if(err&&err.name!=='AbortError')toast(tr('tFail'))}
+  finally{btn.disabled=false;btn.textContent=tr('save')}
 };
 </script>
 </body>
